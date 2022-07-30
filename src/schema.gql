@@ -1,0 +1,77 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  nickName: String!
+  phone: String!
+  email: String
+  avatarUrl: String
+  role: Float!
+  createTime: DateTime!
+  updateTime: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type StatusModel {
+  code: Float!
+  msg: String!
+}
+
+type Token {
+  authorization: String!
+}
+
+type Article {
+  id: ID!
+  title: String!
+  viewNum: Float!
+  summary: String!
+  content: String!
+  contentNum: Float!
+  likes: Float!
+  path: String!
+  weight: Float!
+  createTime: DateTime!
+  tags: [Tags!]!
+}
+
+type Tags {
+  id: ID!
+  type: Float!
+  name: String!
+  nameEn: String!
+  weight: Float!
+  createTime: DateTime!
+}
+
+type ArticleAllModel {
+  count: Float!
+  articles: [Article!]!
+}
+
+type Query {
+  login(input: LoginInput!): Token!
+  getUserByPhoneAndEmail(phoneAndEmail: String!): User!
+  getArticleAll(limit: Int!, offset: Int!): ArticleAllModel!
+}
+
+input LoginInput {
+  account: String!
+  password: String!
+}
+
+type Mutation {
+  createAccount(input: CreateInput!): StatusModel!
+}
+
+input CreateInput {
+  nickName: String!
+  phone: String!
+  password: String!
+}

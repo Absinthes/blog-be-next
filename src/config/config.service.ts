@@ -43,6 +43,7 @@ export class ConfigService {
 
   public getMySQLDataKey(): MySQLDataKey {
     return {
+      type: 'mysql',
       host: this.get('DATABASE_HOST'),
       port: Number(this.get('DATABASE_PORT')),
       username: this.get('DATABASE_USER'),
