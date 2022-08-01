@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { IsNotEmpty } from 'class-validator';
 import { Article } from 'src/article/entity/article.entity';
 import { LiveShared } from 'src/live-shared/entity/live-shared.entity';
 import { Multimedia } from 'src/multimedia/entity/multimedia.entity';
@@ -11,12 +12,14 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+export type TagsType = 1 | 2 | 3 | 4
+
 @Entity()
 @ObjectType()
 export class Tags {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id: string;
+  id?: string;
 
   @Column({
     comment: '1.Article 2.PhotoWall 3.LiveShare 4.multimedia',
@@ -26,31 +29,41 @@ export class Tags {
 
   @Column()
   @Field()
+  @IsNotEmpty()
   name: string;
 
-  @Column()
-  @Field()
-  nameEn: string;
+  @Column({
+    nullable: true
+  })
+  @Field({
+    nullable: true
+  })
+  nameEn?: string;
 
   @Column({
-    type: 'float',
+    type: 'int',
+    default: 0
   })
   @Field()
-  weight: number;
+  weight?: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    comment: '创建时间',
+  })
   @Field()
-  createTime: Date;
+  createTime?: Date;
 
   @ManyToMany(() => Article, (article) => article.tags)
-  articles: Article[];
+  articles?: Article[];
 
   @ManyToMany(() => PhotoWall, (photoWall) => photoWall.tags)
-  photoWalls: PhotoWall[];
+  photoWalls?: PhotoWall[];
 
   @ManyToMany(() => LiveShared, (liveShared) => liveShared.tags)
-  liveShares: LiveShared[];
+  liveShares?: LiveShared[];
 
   @ManyToMany(() => Multimedia, (multimedia) => multimedia.tags)
-  multimedias: Multimedia[];
+  multimedias?: Multimedia[];
 }

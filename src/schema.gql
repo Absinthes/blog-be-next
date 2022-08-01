@@ -31,11 +31,10 @@ type Article {
   id: ID!
   title: String!
   viewNum: Float!
-  summary: String!
-  content: String!
+  summary: String
+  content: String
   contentNum: Float!
   likes: Float!
-  path: String!
   weight: Float!
   createTime: DateTime!
   tags: [Tags!]!
@@ -45,7 +44,7 @@ type Tags {
   id: ID!
   type: Float!
   name: String!
-  nameEn: String!
+  nameEn: String
   weight: Float!
   createTime: DateTime!
 }
@@ -59,6 +58,7 @@ type Query {
   login(input: LoginInput!): Token!
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
   getArticleAll(limit: Int!, offset: Int!): ArticleAllModel!
+  getArticleById(id: String!): Article!
 }
 
 input LoginInput {
@@ -68,10 +68,32 @@ input LoginInput {
 
 type Mutation {
   createAccount(input: CreateInput!): StatusModel!
+  createArticle(articleInsertInput: ArticleInsertInput!): Article!
+  deleteArticle(id: String!): StatusModel!
+  updateArticle(input: ArticleUpdateInput!): Article!
 }
 
 input CreateInput {
   nickName: String!
   phone: String!
   password: String!
+}
+
+input ArticleInsertInput {
+  weight: Float!
+  title: String!
+  summary: String
+  content: String
+  isPublic: Boolean!
+  tags: [String!]
+}
+
+input ArticleUpdateInput {
+  id: ID!
+  weight: Float!
+  title: String!
+  summary: String
+  content: String
+  isPublic: Boolean!
+  tags: [String!]
 }

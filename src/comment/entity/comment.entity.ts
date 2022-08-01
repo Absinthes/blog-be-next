@@ -37,10 +37,14 @@ export class Comment {
   @Column()
   visible: boolean
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    comment: '创建时间'
+  })
   createTime: Date
 
-  @ManyToOne(() => Article, (article) => article)
+  @ManyToOne(() => Article, (article) => article.comments)
   article: Article
 
   @ManyToOne(() => Comment, (comment) => comment.ChildComment)
