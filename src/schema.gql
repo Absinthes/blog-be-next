@@ -27,6 +27,22 @@ type Token {
   authorization: String!
 }
 
+type Comment {
+  id: ID!
+  name: String!
+  content: String!
+  email: String!
+  likes: Int!
+  browser: String!
+  envirconment: String!
+  visible: Boolean!
+  createTime: String!
+  ariticle: Article!
+  rootComment: Comment!
+  parentComment: Comment!
+  ChildComment: [Comment!]!
+}
+
 type Article {
   id: ID!
   title: String!
@@ -55,10 +71,16 @@ type ArticleAllModel {
   articles: [Article!]!
 }
 
+type CommnetAndCount {
+  data: [Comment!]!
+  count: Int!
+}
+
 type Query {
   login(input: LoginInput!): Token!
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
   getArticleAll(limit: Int!, offset: Int!): ArticleAllModel!
+  getCommentByArticleId(ariticleId: String!): CommnetAndCount!
 }
 
 input LoginInput {
@@ -68,10 +90,23 @@ input LoginInput {
 
 type Mutation {
   createAccount(input: CreateInput!): StatusModel!
+  createComment(comment: createCommentInput!, ariticle: PropIdInput!): StatusModel!
 }
 
 input CreateInput {
   nickName: String!
   phone: String!
   password: String!
+}
+
+input createCommentInput {
+  name: String!
+  content: String!
+  email: String
+  browser: String!
+  envirconment: String!
+}
+
+input PropIdInput {
+  ariticleId: String!
 }

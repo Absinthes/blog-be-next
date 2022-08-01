@@ -1,54 +1,94 @@
-import { IsEmail } from "class-validator";
-import { Article } from "src/article/entity/article.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { IsEmail } from 'class-validator';
+import { Article } from 'src/article/entity/article.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
+@ObjectType()
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  @Field(() => ID)
+  id: string;
 
   @Column()
-  name: string
+  @Field(() => String)
+  name: string;
 
   @Column({
     type: 'text',
   })
-  content: string
+  @Field(() => String)
+  content: string;
 
-  @Column()
+  @Column({
+    default: '',
+  })
   @IsEmail()
-  email: string
+  @Field(() => String)
+  email: string;
 
   @Column({
-    default: 0
+    default: 0,
+    comment: '点赞数',
   })
-  likes: number
+  @Field(() => Int)
+  likes: number;
 
   @Column({
-    length: 20
+    length: 20,
+    comment: '浏览器版本',
   })
-  browser: string
+  @Field(() => String)
+  browser: string;
 
   @Column({
-    length: 20
+    length: 20,
   })
-  envirconment: string
+  @Field(() => String)
+  envirconment: string;
 
-  @Column()
-  visible: boolean
+  @Column({
+    comment: '是否展示',
+    default: true,
+  })
+  @Field(() => Boolean)
+  visible: boolean;
 
-  @CreateDateColumn()
-  createTime: Date
+  @CreateDateColumn({
+    comment: '创建',
+  })
+  @Field(() => String)
+  createTime: Date;
 
-  @ManyToOne(() => Article, (article) => article)
-  article: Article
+  @ManyToOne(() => Article, (article) => article.comments, {
+    nullable: true,
+  })
+  @Field(() => Article)
+  ariticle: Article;
 
-  @ManyToOne(() => Comment, (comment) => comment.ChildComment)
-  rootComment: Comment
+  @ManyToOne(() => Comment, (comment) => comment.ChildComment, {
+    nullable: true,
+  })
+  @Field(() => Comment)
+  rootComment: Comment;
 
-  @ManyToOne(() => Comment, (comment) => comment.ChildComment)
-  parentComment: Comment
+  @ManyToOne(() => Comment, (comment) => comment.ChildComment, {
+    nullable: true,
+  })
+  @Field(() => Comment)
+  parentComment: Comment;
 
-  @OneToMany(() => Comment, (comment) => comment.parentComment)
-  ChildComment: Comment[]
+  @OneToMany(() => Comment, (comment) => comment.parentComment, {
+    cascade: true,
+    nullable: true,
+  })
+  @Field(() => [Comment])
+  ChildComment: Comment[];
 }

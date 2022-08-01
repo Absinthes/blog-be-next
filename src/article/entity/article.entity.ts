@@ -75,9 +75,9 @@ export class Article {
 
   @ManyToMany(() => Tags, (tags) => tags.articles, { cascade: true })
   @JoinTable()
-  @Field(() => [Tags])
+  @Field(() => [Tags],{nullable:true})
   tags: Tags[];
 
-  @OneToMany(() => Comment, (comment) => comment.article)
+  @OneToMany(() => Comment, (comment) => comment.ariticle)
   comments: Comment[];
 }
