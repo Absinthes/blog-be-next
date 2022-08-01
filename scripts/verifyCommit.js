@@ -1,7 +1,7 @@
 const msg = require("fs").readFileSync(".git/COMMIT_EDITMSG", "utf-8").trim();
 
 const commitRE =
-  /^(revert: )?(feat|fix|docs|dx|style|refactor|perf|test|workflow|build|ci|chore|types|wip|release|tools)(\(.+\))?: .{1,50}/;
+  /^(revert: )?(feat|fix|docs|dx|style|refactor|perf|test|workflow|build|ci|chore|types|wip|release|tools|merge)(\(.+\))?: .{1,50}/i;
 const mergeRe = /^(Merge pull request|Merge branch)/;
 if (!commitRE.test(msg)) {
   if (!mergeRe.test(msg)) {

@@ -62,16 +62,14 @@ export class Comment {
   visible: boolean;
 
   @CreateDateColumn({
-    comment: '创建',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    comment: '创建时间'
   })
-  @Field(() => String)
-  createTime: Date;
+  createTime: Date
 
-  @ManyToOne(() => Article, (article) => article.comments, {
-    nullable: true,
-  })
-  @Field(() => Article)
-  ariticle: Article;
+  @ManyToOne(() => Article, (article) => article.comments)
+  article: Article
 
   @ManyToOne(() => Comment, (comment) => comment.ChildComment, {
     nullable: true,

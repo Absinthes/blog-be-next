@@ -28,23 +28,25 @@ export class Article {
     default: 0,
   })
   @Field()
-  viewNum: number;
+  viewNum?: number;
 
   @Column({
     type: 'text',
     nullable: true,
   })
-  @Field()
-  summary: string;
+  @Field({nullable: true})
+  summary?: string;
 
   @Column({
     type: 'text',
     nullable: true,
   })
-  @Field()
-  content: string;
+  @Field({nullable: true})
+  content?: string;
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   @Field()
   contentNum: number;
 
@@ -55,22 +57,33 @@ export class Article {
   @Field()
   likes: number;
 
-  @Column()
-  @Field()
-  path: string;
-
-  @Column('float')
+  @Column({
+    type: 'float',
+    default: 0,
+  })
   @Field()
   weight: number;
 
-  @Column('boolean')
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
   isPublic: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    comment: '创建时间',
+  })
   @Field()
   createTime: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+    comment: '更新时间',
+  })
   updateTime: Date;
 
   @ManyToMany(() => Tags, (tags) => tags.articles, { cascade: true })
@@ -78,6 +91,6 @@ export class Article {
   @Field(() => [Tags],{nullable:true})
   tags: Tags[];
 
-  @OneToMany(() => Comment, (comment) => comment.ariticle)
+  @OneToMany(() => Comment, (comment) => comment.ariticle, { cascade: true })
   comments: Comment[];
 }
