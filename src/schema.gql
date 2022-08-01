@@ -27,6 +27,15 @@ type Token {
   authorization: String!
 }
 
+type Tags {
+  id: ID!
+  type: Float!
+  name: String!
+  nameEn: String
+  weight: Float!
+  createTime: DateTime!
+}
+
 type Article {
   id: ID!
   title: String!
@@ -37,16 +46,15 @@ type Article {
   likes: Float!
   weight: Float!
   createTime: DateTime!
-  tags: [Tags!]!
+  tags: [Tags!]
+  groups: [Group!]
 }
 
-type Tags {
+type Group {
   id: ID!
-  type: Float!
   name: String!
   nameEn: String
-  weight: Float!
-  createTime: DateTime!
+  articles: [Article!]!
 }
 
 type ArticleAllModel {
@@ -59,6 +67,8 @@ type Query {
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
   getArticleAll(limit: Int!, offset: Int!): ArticleAllModel!
   getArticleById(id: String!): Article!
+  getAllTag(type: Float!): [Tags!]!
+  getTagsList(paginationQuery: PaginationQuerInput!, type: Int): [Tags!]!
 }
 
 input LoginInput {
@@ -66,11 +76,19 @@ input LoginInput {
   password: String!
 }
 
+input PaginationQuerInput {
+  limit: Float!
+  offset: Float!
+}
+
 type Mutation {
   createAccount(input: CreateInput!): StatusModel!
   createArticle(articleInsertInput: ArticleInsertInput!): Article!
   deleteArticle(id: String!): StatusModel!
   updateArticle(input: ArticleUpdateInput!): Article!
+  createTag(input: TagsCreateInput!): Tags!
+  updateTag(input: TagsUpdateInput!): Tags!
+  deleteTag(id: String!): StatusModel!
 }
 
 input CreateInput {
@@ -86,6 +104,7 @@ input ArticleInsertInput {
   content: String
   isPublic: Boolean!
   tags: [String!]
+  groups: [String!]
 }
 
 input ArticleUpdateInput {
@@ -96,4 +115,20 @@ input ArticleUpdateInput {
   content: String
   isPublic: Boolean!
   tags: [String!]
+  groups: [String!]
+}
+
+input TagsCreateInput {
+  type: Float!
+  name: String!
+  nameEn: String
+  weight: Float
+}
+
+input TagsUpdateInput {
+  id: ID!
+  type: Float!
+  name: String!
+  nameEn: String
+  weight: Float
 }

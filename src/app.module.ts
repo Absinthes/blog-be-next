@@ -12,6 +12,7 @@ import { PhotoWallModule } from './photo-wall/photo-wall.module';
 import { CommentModule } from './comment/comment.module';
 import { LiveSharedModule } from './live-shared/live-shared.module';
 import { MultimediaModule } from './multimedia/multimedia.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MultimediaModule } from './multimedia/multimedia.module';
     CommentModule,
     LiveSharedModule,
     MultimediaModule,
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

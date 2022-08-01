@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
 import { Repository } from 'typeorm';
+import { TagsCreateInput } from './dtos/tags.create.input';
+import { TagsUpdateInput } from './dtos/tags.update.input';
 import { Tags, TagsType } from './entity/tags.entity';
 
 @Injectable()
@@ -10,15 +13,48 @@ export class TagsService {
     private readonly tagsRepository: Repository<Tags>,
   ) {}
   
-  async TagById(id: string) {
+  public async allByType(type: number){
     return this.tagsRepository.find({
+      where: {
+        type
+      }
+    })
+  }
+
+  public async list(paginationQuery: PaginationQuerInput, type?: number) {
+    const { limit, offset } = paginationQuery
+    return this.tagsRepository.findAndCount({
+      skip: offset,
+      take: limit,
+      where: {
+        type
+      }
+    })
+  }
+
+  public async create(input: TagsCreateInput) {
+    let tagResult = this.tagsRepository.create(input)
+    return this.tagsRepository.save(tagResult)
+  }
+
+  public async update(input: TagsUpdateInput){
+    return this.tagsRepository.update(input.id, input)
+  }
+
+  public async delete(id: string) {
+    const tag = await this.TagById(id)
+    return this.tagsRepository.remove(tag)
+  }
+  
+  public async TagById(id: string) {
+    return this.tagsRepository.findOne({
       where: {
         id
       }
     })
   }
 
-  async TagByName(name: string){
+  public async TagByName(name: string){
     return this.tagsRepository.findOne({
       where: {
         name
@@ -26,7 +62,7 @@ export class TagsService {
     })
   }
 
-  async ArticleTags(articleId: string) {
+  public async ArticleTags(articleId: string) {
     return this.tagsRepository.find({
       where: {
         articles: {
@@ -42,7 +78,7 @@ export class TagsService {
    * @param tags 
    * @returns 
    */
-  async findOrInsertTags(type: TagsType, tags: string[]) {
+  public async findOrInsertTags(type: TagsType, tags: string[]) {
     let res: Tags[] = [];
     for (let i = 0; i < tags.length; i++) {
       res.push(
@@ -55,7 +91,7 @@ export class TagsService {
     return res
   }
 
-  async findOrInsertTag(tag: Tags) {
+  public async findOrInsertTag(tag: Tags) {
     const prev = await this.TagByName(tag.name)
     if(prev) return prev
     const tagResult = this.tagsRepository.create(tag)

@@ -10,4 +10,5 @@ export class ArticleInsertInput {
   content?: string
   isPublic: boolean
   tags?: string[]
+  groups?: string[]
 }

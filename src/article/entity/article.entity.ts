@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Comment } from 'src/comment/entity/comment.entity';
+import { Group } from 'src/group/entity/group.entity';
 import { Tags } from 'src/tags/entity/tags.entity';
 import {
   Column,
@@ -34,14 +35,14 @@ export class Article {
     type: 'text',
     nullable: true,
   })
-  @Field({nullable: true})
+  @Field({ nullable: true })
   summary?: string;
 
   @Column({
     type: 'text',
     nullable: true,
   })
-  @Field({nullable: true})
+  @Field({ nullable: true })
   content?: string;
 
   @Column({
@@ -88,8 +89,13 @@ export class Article {
 
   @ManyToMany(() => Tags, (tags) => tags.articles, { cascade: true })
   @JoinTable()
-  @Field(() => [Tags])
-  tags: Tags[];
+  @Field(() => [Tags], { nullable: true })
+  tags?: Tags[];
+
+  @ManyToMany(() => Group, (group) => group.articles, { cascade: true })
+  @JoinTable()
+  @Field(() => [Group], { nullable: true })
+  groups?: Group[];
 
   @OneToMany(() => Comment, (comment) => comment.article, { cascade: true })
   comments: Comment[];
