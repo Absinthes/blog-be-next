@@ -11,7 +11,13 @@ export class PhotoWallService {
     private readonly photoWallRepository:Repository<PhotoWall>
   ){}
 
-  public async getPhotoWallbyPage(paginationQuer:PaginationQuerInput){
-
+  public async getPhotoWallbyPage({offset,limit}:PaginationQuerInput){
+    return await this.photoWallRepository.findAndCount({
+      skip:offset,
+      take:limit,
+      relations:{
+        tags:true
+      }
+    })
   }
 }

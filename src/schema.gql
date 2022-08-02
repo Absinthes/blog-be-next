@@ -31,6 +31,15 @@ type Comment {
   id: ID!
 }
 
+type Tags {
+  id: ID!
+  type: Float!
+  name: String!
+  nameEn: String
+  weight: Float!
+  createTime: DateTime!
+}
+
 type Article {
   id: ID!
   title: String!
@@ -42,12 +51,61 @@ type Article {
   weight: Float!
   createTime: DateTime!
   tags: [Tags!]
+  groups: [Group!]
 }
 
 type Group {
   id: ID!
   name: String!
   nameEn: String
+  articles: [Article!]!
+}
+
+type ArticleAllModel {
+  count: Float!
+  articles: [Article!]!
+}
+
+type CommnetAndCount {
+  data: [Comment!]!
+  count: Int!
+}
+
+type Query {
+  login(input: LoginInput!): Token!
+  getUserByPhoneAndEmail(phoneAndEmail: String!): User!
+  getArticleAll(limit: Int!, offset: Int!): ArticleAllModel!
+  getArticleById(id: String!): Article!
+  getAllTag(type: Float!): [Tags!]!
+  getTagsList(paginationQuery: PaginationQuerInput!, type: Int): [Tags!]!
+  getPhotoWall(input: PaginationQuerInput!): StatusModel!
+  createPhoto: StatusModel!
+  getCommentByArticleId(ariticleId: String!): CommnetAndCount!
+  getCommentByID(id: String!): Comment!
+}
+
+input LoginInput {
+  account: String!
+  password: String!
+}
+
+input PaginationQuerInput {
+  limit: Float!
+  offset: Float!
+}
+
+type Mutation {
+  createAccount(input: CreateInput!): StatusModel!
+  createArticle(articleInsertInput: ArticleInsertInput!): Article!
+  deleteArticle(id: String!): StatusModel!
+  updateArticle(input: ArticleUpdateInput!): Article!
+  createTag(input: TagsCreateInput!): Tags!
+  updateTag(input: TagsUpdateInput!): Tags!
+  deleteTag(id: String!): StatusModel!
+  createComment(comment: createCommentInput!): StatusModel!
+  updateComment(comment: updateCommentInput!): StatusModel!
+  deleteComment(id: String!): StatusModel!
+}
 
 input CreateInput {
   nickName: String!
@@ -73,6 +131,22 @@ input ArticleUpdateInput {
   content: String
   isPublic: Boolean!
   tags: [String!]
+  groups: [String!]
+}
+
+input TagsCreateInput {
+  type: Float!
+  name: String!
+  nameEn: String
+  weight: Float
+}
+
+input TagsUpdateInput {
+  id: ID!
+  type: Float!
+  name: String!
+  nameEn: String
+  weight: Float
 }
 
 input createCommentInput {
