@@ -2,11 +2,6 @@ import { Field, InputType } from "@nestjs/graphql";
 import { IsEmail, isNotEmpty, IsNotEmpty } from "class-validator";
 
 @InputType()
-export class PropIdInput{
-  ariticleId:string
-}
-
-@InputType()
 export class createCommentInput{
   @IsNotEmpty()
   name:string
@@ -14,7 +9,7 @@ export class createCommentInput{
   @IsNotEmpty()
   content:string
 
-  // @IsEmail()
+  @IsEmail()
   email?:string
 
   @IsNotEmpty()
@@ -22,4 +17,10 @@ export class createCommentInput{
 
   @IsNotEmpty()
   envirconment:string
+
+  article?:string
+  rootComment?:string
+  parentComment?:string
+  childComment?:string
+
 }

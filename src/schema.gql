@@ -29,18 +29,6 @@ type Token {
 
 type Comment {
   id: ID!
-  name: String!
-  content: String!
-  email: String!
-  likes: Int!
-  browser: String!
-  envirconment: String!
-  visible: Boolean!
-  createTime: String!
-  ariticle: Article!
-  rootComment: Comment!
-  parentComment: Comment!
-  ChildComment: [Comment!]!
 }
 
 type Article {
@@ -53,7 +41,7 @@ type Article {
   likes: Float!
   weight: Float!
   createTime: DateTime!
-  tags: [Tags!]!
+  tags: [Tags!]
 }
 
 type Tags {
@@ -80,6 +68,8 @@ type Query {
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
   getArticleAll(limit: Int!, offset: Int!): ArticleAllModel!
   getArticleById(id: String!): Article!
+  getCommentByArticleId(ariticleId: String!): CommnetAndCount!
+  getCommentByID(id: String!): Comment!
 }
 
 input LoginInput {
@@ -92,6 +82,9 @@ type Mutation {
   createArticle(articleInsertInput: ArticleInsertInput!): Article!
   deleteArticle(id: String!): StatusModel!
   updateArticle(input: ArticleUpdateInput!): Article!
+  createComment(comment: createCommentInput!): StatusModel!
+  updateComment(comment: updateCommentInput!): StatusModel!
+  deleteComment(id: String!): StatusModel!
 }
 
 input CreateInput {
@@ -117,4 +110,29 @@ input ArticleUpdateInput {
   content: String
   isPublic: Boolean!
   tags: [String!]
+}
+
+input createCommentInput {
+  name: String!
+  content: String!
+  email: String
+  browser: String!
+  envirconment: String!
+  article: String
+  rootComment: String
+  parentComment: String
+  childComment: String
+}
+
+input updateCommentInput {
+  id: String!
+  name: String
+  content: String
+  email: String
+  browser: String
+  visible: Boolean
+  envirconment: String
+  article: String
+  rootComment: String
+  parentComment: String
 }

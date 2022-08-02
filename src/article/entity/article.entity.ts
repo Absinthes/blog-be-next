@@ -91,6 +91,6 @@ export class Article {
   @Field(() => [Tags],{nullable:true})
   tags: Tags[];
 
-  @OneToMany(() => Comment, (comment) => comment.ariticle, { cascade: true })
+  @OneToMany(() => Comment, (comment) => comment.article, { cascade: true })
   comments: Comment[];
 }

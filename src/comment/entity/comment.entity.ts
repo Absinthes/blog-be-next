@@ -18,47 +18,40 @@ export class Comment {
   id: string;
 
   @Column()
-  @Field(() => String)
   name: string;
 
   @Column({
     type: 'text',
   })
-  @Field(() => String)
   content: string;
 
   @Column({
     default: '',
   })
   @IsEmail()
-  @Field(() => String)
   email: string;
 
   @Column({
     default: 0,
     comment: '点赞数',
   })
-  @Field(() => Int)
   likes: number;
 
   @Column({
     length: 20,
     comment: '浏览器版本',
   })
-  @Field(() => String)
   browser: string;
 
   @Column({
     length: 20,
   })
-  @Field(() => String)
   envirconment: string;
 
   @Column({
     comment: '是否展示',
     default: true,
   })
-  @Field(() => Boolean)
   visible: boolean;
 
   @CreateDateColumn({
@@ -71,22 +64,19 @@ export class Comment {
   @ManyToOne(() => Article, (article) => article.comments)
   article: Article
 
-  @ManyToOne(() => Comment, (comment) => comment.ChildComment, {
+  @ManyToOne(() => Comment, (comment) => comment.childComment, {
     nullable: true,
   })
-  @Field(() => Comment)
   rootComment: Comment;
 
-  @ManyToOne(() => Comment, (comment) => comment.ChildComment, {
+  @ManyToOne(() => Comment, (comment) => comment.childComment, {
     nullable: true,
   })
-  @Field(() => Comment)
   parentComment: Comment;
 
   @OneToMany(() => Comment, (comment) => comment.parentComment, {
     cascade: true,
     nullable: true,
   })
-  @Field(() => [Comment])
-  ChildComment: Comment[];
+  childComment: Comment[];
 }
