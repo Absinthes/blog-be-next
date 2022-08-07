@@ -31,6 +31,26 @@ type Comment {
   id: ID!
 }
 
+type LiveShared {
+  id: ID!
+  content: String!
+  address: String
+  emotion: String
+  illustration: String
+  weight: Float
+  tags: [Tags!]!
+}
+
+type PhotoWall {
+  id: ID!
+  name: String!
+  path: String!
+  originUrl: String
+  author: String
+  createTime: String!
+  tags: [Tags!]!
+}
+
 type Tags {
   id: ID!
   type: Float!
@@ -66,9 +86,25 @@ type ArticleAllModel {
   articles: [Article!]!
 }
 
+type PaginatedPhotoWall {
+  nodes: [PhotoWall!]
+  totalCount: Int!
+}
+
 type CommnetAndCount {
   data: [Comment!]!
   count: Int!
+}
+
+type FilePath {
+  path: String!
+  fullPath: String!
+}
+
+type FileSuccessModel {
+  code: Int!
+  msg: String!
+  nodes: FilePath
 }
 
 type Query {
@@ -78,10 +114,12 @@ type Query {
   getArticleById(id: String!): Article!
   getAllTag(type: Float!): [Tags!]!
   getTagsList(paginationQuery: PaginationQuerInput!, type: Int): [Tags!]!
-  getPhotoWall(input: PaginationQuerInput!): StatusModel!
-  createPhoto: StatusModel!
+  getPhotoWall(input: PaginationQuerInput!): PaginatedPhotoWall!
+  getPhotoWallById(id: String!): PhotoWall!
   getCommentByArticleId(ariticleId: String!): CommnetAndCount!
   getCommentByID(id: String!): Comment!
+  getLiveSharedById(id: String!): LiveShared!
+  getLiveSharedList(paginationQuery: PaginationQuerInput!): [LiveShared!]!
 }
 
 input LoginInput {
@@ -102,9 +140,17 @@ type Mutation {
   createTag(input: TagsCreateInput!): Tags!
   updateTag(input: TagsUpdateInput!): Tags!
   deleteTag(id: String!): StatusModel!
+  addPhotoToWall(createPhotoInput: CreatePhotoInput!): PhotoWall!
+  addPhotoWallList(createPhotoList: [CreatePhotoInput!]!): StatusModel!
+  deletePhotoWall(id: String!): StatusModel!
+  updatePhotoWall(updateInput: UpdatePhotoWallInput!): StatusModel!
   createComment(comment: createCommentInput!): StatusModel!
   updateComment(comment: updateCommentInput!): StatusModel!
   deleteComment(id: String!): StatusModel!
+  createLiveShared(createLiveShared: CreateLiveSharedInput!): StatusModel!
+  updateLiveShared(updateLiveShared: UpdateLiveSharedInput!): StatusModel!
+  deleteLiveShared(id: String!): StatusModel!
+  singleUpload(file: Upload!): FileSuccessModel!
 }
 
 input CreateInput {
@@ -149,6 +195,26 @@ input TagsUpdateInput {
   weight: Float
 }
 
+input CreatePhotoInput {
+  file: Upload!
+  name: String!
+  originUrl: String
+  author: String
+  tags: [String!]
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UpdatePhotoWallInput {
+  file: Upload
+  id: String!
+  name: String!
+  originUrl: String
+  author: String
+  tags: [String!]
+}
+
 input createCommentInput {
   name: String!
   content: String!
@@ -172,4 +238,23 @@ input updateCommentInput {
   article: String
   rootComment: String
   parentComment: String
+}
+
+input CreateLiveSharedInput {
+  file: Upload
+  weight: Float
+  content: String!
+  address: String
+  emotion: String
+  tags: [String!]
+}
+
+input UpdateLiveSharedInput {
+  id: ID!
+  file: Upload
+  weight: Float
+  content: String!
+  address: String
+  emotion: String
+  tags: [String!]
 }

@@ -62,14 +62,34 @@ export class TagsService {
     })
   }
 
-  public async ArticleTags(articleId: string) {
+  public async ArticleTags(id: string) {
     return this.tagsRepository.find({
       where: {
         articles: {
-          id: articleId,
+          id,
         },
       },
     });
+  }
+
+  public async photoWallTags(id: string) {
+    return this.tagsRepository.find({
+      where: {
+        photoWalls: {
+          id
+        }
+      }
+    })
+  }
+
+  public async liveSharedTags(id: string) {
+    return this.tagsRepository.find({
+      where: {
+        liveShares: {
+          id
+        }
+      }
+    })
   }
 
   /**
@@ -79,6 +99,7 @@ export class TagsService {
    * @returns 
    */
   public async findOrInsertTags(type: TagsType, tags: string[]) {
+    if (!Array.isArray(tags) || tags.length == 0) return []
     let res: Tags[] = [];
     for (let i = 0; i < tags.length; i++) {
       res.push(

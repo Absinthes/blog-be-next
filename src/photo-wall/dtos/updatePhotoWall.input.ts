@@ -2,10 +2,11 @@ import { Field, InputType } from '@nestjs/graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @InputType()
-export class CreatePhotoInput {
+export class UpdatePhotoWallInput {
+  id: string;
   name: string;
-  @Field(() => GraphQLUpload)
-  file: FileUpload;
+  @Field(() => GraphQLUpload, { nullable: true })
+  file?: FileUpload;
   originUrl?: string;
   author?: string;
   tags?: string[];

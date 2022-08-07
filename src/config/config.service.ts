@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import dotenv, { DotenvParseOutput, parse } from 'dotenv'
 import * as fs from 'fs';
+import { resolve } from 'path';
 import { MySQLDataKey } from './interface/dataBaseKey.interface';
 
 export type EnvConfig = Record<string, any>
@@ -54,5 +55,13 @@ export class ConfigService {
 
   private get<T>(key: string): T{
     return this.envConfig[key]
+  }
+
+  public getServiceURL() {
+    return this.get('SERVICE_URL')
+  }
+
+  public getStaticResourceDir() {
+    return resolve(__dirname, '../../public')
   }
 }

@@ -4,7 +4,6 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 export interface IPaginatedType<T>{
   nodes:T[],
   totalCount:number
-  hasNextPage:boolean
 }
 
 export function Paginated<T>(classRef:Type<T>):Type<IPaginatedType<T>>{
@@ -17,13 +16,9 @@ export function Paginated<T>(classRef:Type<T>):Type<IPaginatedType<T>>{
     @Field(() => Int)
     totalCount: number;
 
-    @Field()
-    hasNextPage: boolean;
-
-    constructor(nodes:T[],totoalCount:number,hasNextPage:boolean){
+    constructor(nodes:T[],totoalCount:number){
       this.nodes = nodes;
       this.totalCount = totoalCount
-      this.hasNextPage = hasNextPage
     }
   }
 

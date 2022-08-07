@@ -13,9 +13,15 @@ import { CommentModule } from './comment/comment.module';
 import { LiveSharedModule } from './live-shared/live-shared.module';
 import { MultimediaModule } from './multimedia/multimedia.module';
 import { GroupModule } from './group/group.module';
+import { FileUploadModule } from './shared/file-upload/file-upload.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../public'),
+    }),
     ConfigModule,
     GraphqlModule,
     DatabaseModule,
@@ -28,6 +34,7 @@ import { GroupModule } from './group/group.module';
     LiveSharedModule,
     MultimediaModule,
     GroupModule,
+    FileUploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
