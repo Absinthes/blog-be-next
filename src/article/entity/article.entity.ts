@@ -97,6 +97,6 @@ export class Article {
   @Field(() => [Group], { nullable: true })
   groups?: Group[];
 
-  @OneToMany(() => Comment, (comment) => comment.article, { cascade: true })
+  @OneToMany(() => Comment, (comment) => comment.article, { cascade: true,onDelete:"CASCADE" })
   comments: Comment[];
 }

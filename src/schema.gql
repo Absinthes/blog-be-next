@@ -29,6 +29,20 @@ type Token {
 
 type Comment {
   id: ID!
+  type: Int!
+  name: String!
+  content: String!
+  email: String!
+  likes: String!
+  browser: String!
+  envirconment: String!
+  visible: Boolean!
+  createTime: String!
+  article: Article
+  rootComment: Comment
+  parentComment: Comment
+  childComment: [Comment!]!
+  hasChildren: Boolean!
 }
 
 type LiveShared {
@@ -92,8 +106,8 @@ type PaginatedPhotoWall {
 }
 
 type CommnetAndCount {
-  data: [Comment!]!
-  count: Int!
+  nodes: [Comment!]
+  totalCount: Int!
 }
 
 type FilePath {
@@ -118,6 +132,8 @@ type Query {
   getPhotoWallById(id: String!): PhotoWall!
   getCommentByArticleId(ariticleId: String!): CommnetAndCount!
   getCommentByID(id: String!): Comment!
+  getCommnet(input: PaginationQuerInput!): CommnetAndCount!
+  getCommentByRoot(input: PaginationQuerInput!): CommnetAndCount!
   getLiveSharedById(id: String!): LiveShared!
   getLiveSharedList(paginationQuery: PaginationQuerInput!): [LiveShared!]!
 }
@@ -216,6 +232,7 @@ input UpdatePhotoWallInput {
 }
 
 input createCommentInput {
+  type: Float!
   name: String!
   content: String!
   email: String
