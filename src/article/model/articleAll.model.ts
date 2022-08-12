@@ -3,6 +3,6 @@ import { Article } from "../entity/article.entity";
 
 @ObjectType()
 export class ArticleAllModel {
-  count: number
-  articles: Article[]
+  totalCount: number
+  nodes: Article[]
 }

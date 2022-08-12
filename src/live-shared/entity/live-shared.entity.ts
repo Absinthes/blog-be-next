@@ -2,10 +2,12 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Tags } from 'src/tags/entity/tags.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from 'typeorm';
 
 @Entity()
@@ -39,6 +41,23 @@ export class LiveShared {
   })
   @Field({ nullable: true })
   weight: number;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    comment: '创建时间',
+  })
+  @Field()
+  createTime: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+    comment: '更新时间',
+  })
+  @Field()
+  updateTime: Date;
 
   @ManyToMany(() => Tags, (tags) => tags.liveShares, { cascade: true })
   @JoinTable()

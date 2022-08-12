@@ -25,7 +25,7 @@ export class PhotoWallResolver {
   ) {}
 
   @Query(() => PaginatedPhotoWall)
-  public async getPhotoWall(
+  public async getPhotoWallList(
     @Args({ name: 'input', type: () => PaginationQuerInput }) input,
   ) {
     let [nodes, totalCount] = await this.photoWallService.list(

@@ -38,6 +38,8 @@ type LiveShared {
   emotion: String
   illustration: String
   weight: Float
+  createTime: DateTime!
+  updateTime: DateTime!
   tags: [Tags!]!
 }
 
@@ -69,21 +71,32 @@ type Article {
   contentNum: Float!
   likes: Float!
   weight: Float!
-  createTime: DateTime!
+  isPublic: Boolean!
+  createTime: String!
+  updateTime: String!
   tags: [Tags!]
   groups: [Group!]
+  comments: [Comment!]
 }
 
 type Group {
   id: ID!
   name: String!
   nameEn: String
+  createTime: String!
   articles: [Article!]!
 }
 
 type ArticleAllModel {
-  count: Float!
-  articles: [Article!]!
+  totalCount: Float!
+  nodes: [Article!]!
+}
+
+type ArticleModel {
+  id: ID!
+  tags: [Tags!]!
+  group: [Group!]!
+  comments: [Comment!]!
 }
 
 type PaginatedPhotoWall {
@@ -110,11 +123,11 @@ type FileSuccessModel {
 type Query {
   login(input: LoginInput!): Token!
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
-  getArticleAll(limit: Int!, offset: Int!): ArticleAllModel!
+  getArticleList(limit: Int!, offset: Int!): ArticleAllModel!
   getArticleById(id: String!): Article!
   getAllTag(type: Float!): [Tags!]!
   getTagsList(paginationQuery: PaginationQuerInput!, type: Int): [Tags!]!
-  getPhotoWall(input: PaginationQuerInput!): PaginatedPhotoWall!
+  getPhotoWallList(input: PaginationQuerInput!): PaginatedPhotoWall!
   getPhotoWallById(id: String!): PhotoWall!
   getCommentByArticleId(ariticleId: String!): CommnetAndCount!
   getCommentByID(id: String!): Comment!

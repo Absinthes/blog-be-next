@@ -29,7 +29,7 @@ export class Article {
     default: 0,
   })
   @Field()
-  viewNum?: number;
+  viewNum: number;
 
   @Column({
     type: 'text',
@@ -69,6 +69,7 @@ export class Article {
     type: 'boolean',
     default: false,
   })
+  @Field()
   isPublic: boolean;
 
   @CreateDateColumn({
@@ -76,7 +77,7 @@ export class Article {
     default: () => 'CURRENT_TIMESTAMP(6)',
     comment: '创建时间',
   })
-  @Field()
+  @Field(() => String)
   createTime: Date;
 
   @UpdateDateColumn({
@@ -85,6 +86,7 @@ export class Article {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
     comment: '更新时间',
   })
+  @Field(() => String)
   updateTime: Date;
 
   @ManyToMany(() => Tags, (tags) => tags.articles, { cascade: true })
@@ -98,5 +100,6 @@ export class Article {
   groups?: Group[];
 
   @OneToMany(() => Comment, (comment) => comment.article, { cascade: true })
+  @Field(() => [Comment], { nullable: true })
   comments: Comment[];
 }
