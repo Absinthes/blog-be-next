@@ -191,6 +191,8 @@ type Mutation {
   deleteLiveShared(id: String!): StatusModel!
   singleUpload(file: Upload!): FileSuccessModel!
   createType(input: createTypeInput!): StatusModel!
+  deleteType(id: String!): StatusModel!
+  updateType(input: updateTypeInput!): StatusModel!
 }
 
 input CreateInput {
@@ -302,6 +304,13 @@ input UpdateLiveSharedInput {
 
 input createTypeInput {
   name: String!
+  rootType: String
+  parentType: String
+}
+
+input updateTypeInput {
+  id: String!
+  name: String
   rootType: String
   parentType: String
 }

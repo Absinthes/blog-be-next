@@ -41,4 +41,6 @@ export class Type {
 
   @Field(() => Boolean)
   hasChildren: boolean;
+
+  
 }

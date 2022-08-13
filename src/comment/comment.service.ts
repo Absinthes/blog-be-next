@@ -71,6 +71,9 @@ export class CommentService {
       .createQueryBuilder('comment')
       .leftJoinAndSelect("comment.article","article")
       .leftJoinAndSelect("comment.childComment","childComment")
+      .leftJoinAndSelect("childComment.article","childArticle")
+      .leftJoinAndSelect("childComment.rootComment","childRootComment")
+      .leftJoinAndSelect("childComment.parentComment","childParentComment")
       .where('comment.rootComment IS NULL')
       .limit(limit)
       .offset(offset)
@@ -114,7 +117,7 @@ export class CommentService {
         this.getCommentById.bind(this),
       ],
     );
-    const res = await this.commnetRepository.update(id, {
+    return await this.commnetRepository.update(id, {
       ...rest,
     });
   }
