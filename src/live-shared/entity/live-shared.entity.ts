@@ -23,21 +23,22 @@ export class LiveShared {
   @Field()
   content: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true,comment:"地址" })
   @Field({ nullable: true })
   address: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true,comment:"心情" })
   @Field({ nullable: true })
   emotion: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true,comment:"封面图片地址" })
   @Field({ nullable: true })
   illustration: string;
 
   @Column({
     type: 'float',
     default: 0,
+    comment:"权重"
   })
   @Field({ nullable: true })
   weight: number;

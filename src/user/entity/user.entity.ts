@@ -15,11 +15,15 @@ export class User {
   @Field(() => ID)
   id: string;
 
-  @Column()
+  @Column({
+    comment:"名称"
+  })
   @Field()
   nickName: string;
 
-  @Column()
+  @Column({
+    comment:"手机号码"
+  })
   @Field()
   phone: string;
 

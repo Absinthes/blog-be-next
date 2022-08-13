@@ -134,6 +134,15 @@ type FileSuccessModel {
   nodes: FilePath
 }
 
+type Type {
+  id: ID!
+  name: String!
+  rootType: Type
+  parentType: Type
+  childType: [Type!]
+  hasChildren: Boolean!
+}
+
 type Query {
   login(input: LoginInput!): Token!
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
@@ -149,6 +158,7 @@ type Query {
   getCommentByRoot(input: PaginationQuerInput!): CommnetAndCount!
   getLiveSharedById(id: String!): LiveShared!
   getLiveSharedList(paginationQuery: PaginationQuerInput!): [LiveShared!]!
+  getTypeByRoot(input: PaginationQuerInput!): [Type!]!
 }
 
 input LoginInput {
@@ -180,6 +190,7 @@ type Mutation {
   updateLiveShared(updateLiveShared: UpdateLiveSharedInput!): StatusModel!
   deleteLiveShared(id: String!): StatusModel!
   singleUpload(file: Upload!): FileSuccessModel!
+  createType(input: createTypeInput!): StatusModel!
 }
 
 input CreateInput {
@@ -287,4 +298,10 @@ input UpdateLiveSharedInput {
   address: String
   emotion: String
   tags: [String!]
+}
+
+input createTypeInput {
+  name: String!
+  rootType: String
+  parentType: String
 }

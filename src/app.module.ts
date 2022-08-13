@@ -16,6 +16,7 @@ import { GroupModule } from './group/group.module';
 import { FileUploadModule } from './shared/file-upload/file-upload.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { TypeModule } from './type/type.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { join } from 'path';
     MultimediaModule,
     GroupModule,
     FileUploadModule,
+    TypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

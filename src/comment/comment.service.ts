@@ -5,6 +5,7 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArticleService } from 'src/article/article.service';
+import { getForeign } from 'src/shared/utils';
 import { IsNull, Repository } from 'typeorm';
 import { createCommentInput } from './dtos/createComment.input';
 import { updateCommentInput } from './dtos/updateComment.input';
@@ -123,12 +124,5 @@ export class CommentService {
   }
 }
 
-async function getForeign(props: any, foreigns: any[], methods: any[]) {
-  for (const prop in props) {
-    if (foreigns.includes(prop)) {
-      const i = foreigns.indexOf(prop);
-      props[prop] = await methods[i](props[prop]);
-    }
-  }
-  return props;
-}
+
+
