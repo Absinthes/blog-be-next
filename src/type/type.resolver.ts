@@ -5,6 +5,7 @@ import { StatusModel } from 'src/shared/model/status.modle';
 import { createTypeInput } from './dtos/createType.input';
 import { updateTypeInput } from './dtos/updateType.input';
 import { Type } from './entity/type.entity';
+import { TypeAndCount } from './model/TypeAndCount.model';
 import { TypeService } from './type.service';
 
 @Resolver(() => Type)
@@ -13,10 +14,16 @@ export class TypeResolver {
     private readonly typeService:TypeService
   ){}
 
-  @Query(() => [Type])
+  @Query(() => TypeAndCount)
   public async getTypeByRoot(@Args({name:"input",type: () => PaginationQuerInput}) input){
     //获取根分类
-    return  await this.typeService.getTypeByRoot(input.offset,input.limit);
+    const res =  await this.typeService.getTypeByRoot(input.offset,input.limit);
+    return new TypeAndCount(...res)
+  }
+
+  @Query(() => Type)
+  public async getTypeById(@Args({name:'id',type: () => String}) id){
+    return await this.typeService.getTypeById(id,['childType','parentType','rootType'])
   }
 
   @Mutation(() => StatusModel)
@@ -44,22 +51,28 @@ export class TypeResolver {
 
   @ResolveField()
   public async rootType(@Parent() type:Type){
-    return type.rootType 
+    if(type.rootType) return type.rootType
+    const curType = await this.typeService.getTypeById(type.id,['rootType'])
+    return curType.rootType
   }
 
   @ResolveField()
   public async parentType(@Parent() type:Type){
-    return type.parentType 
+    if(type.parentType) return type.parentType
+    const curType = await this.typeService.getTypeById(type.id,['parentType'])
+    return curType.parentType
   }
 
   @ResolveField()
   public async childType(@Parent() type:Type){
-    return type.childType 
+    if(type.childType) return type.childType
+    const curType = await this.typeService.getTypeById(type.id,['childType'])
+    return curType.childType
   }
 
   @ResolveField()
   public async hasChildren(@Parent() type:Type){
-    return type.childType && type.childType.length > 0
+    return type.childType && type.childType.length == 0
   }
 
 }

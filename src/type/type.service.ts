@@ -25,7 +25,7 @@ export class TypeService {
     .where('type.rootType IS NULL')
     .limit(limit)
     .offset(offset)
-    .getMany()
+    .getManyAndCount()
   }
 
   public async getTypeById(id: string, relations: typeType[] = []) {
@@ -52,7 +52,7 @@ export class TypeService {
   }
 
   public async getTypeByName(name:string){
-    return await this.TypeRepository.find({
+    return await this.TypeRepository.findOne({
       where:{
         name
       }

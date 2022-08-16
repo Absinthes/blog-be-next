@@ -1,6 +1,8 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { PhotoWall } from 'src/photo-wall/entity/photo-wall.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -17,6 +19,14 @@ export class Type {
   @Column()
   @Field(() => String)
   name: string;
+
+  @Field(() => String)
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    comment: '创建时间',
+  })
+  createTime: Date;
 
   @ManyToOne(() => Type, (type) => type.childType, {
     nullable: true,
@@ -39,8 +49,13 @@ export class Type {
   @Field(() => [Type],{nullable:true})
   childType: Type[];
 
+  @OneToMany(() => PhotoWall,(photo) => photo.type,{
+    cascade:true,
+    nullable:true
+  })
+  @Field(() => [PhotoWall])
+  photos:PhotoWall[]
+
   @Field(() => Boolean)
   hasChildren: boolean;
-
-  
 }
