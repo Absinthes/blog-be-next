@@ -57,6 +57,17 @@ type LiveShared {
   tags: [Tags!]!
 }
 
+type Type {
+  id: ID!
+  name: String!
+  createTime: String!
+  rootType: Type
+  parentType: Type
+  childType: [Type!]
+  photos: [PhotoWall!]!
+  hasChildren: Boolean!
+}
+
 type Multimedia {
   id: ID!
   title: String!
@@ -80,6 +91,7 @@ type PhotoWall {
   author: String
   createTime: String!
   tags: [Tags!]!
+  type: Type!
 }
 
 type Tags {
@@ -192,9 +204,9 @@ type Query {
   getCommnet(input: PaginationQuerInput!): CommnetAndCount!
   getCommentByRoot(input: PaginationQuerInput!): CommnetAndCount!
   getLiveSharedById(id: String!): LiveShared!
-  getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
-  getGroupList(input: PaginationQuerInput!): PaginatedGroup!
-  getTypeByRoot(input: PaginationQuerInput!): [Type!]!
+  getLiveSharedList(paginationQuery: PaginationQuerInput!): [LiveShared!]!
+  getTypeByRoot(input: PaginationQuerInput!): TypeAndCount!
+  getTypeById(id: String!): Type!
 }
 
 input LoginInput {
@@ -230,6 +242,8 @@ type Mutation {
   deleteGroup(id: ID!): StatusModel!
   singleUpload(file: Upload!): FileSuccessModel!
   createType(input: createTypeInput!): StatusModel!
+  deleteType(id: String!): StatusModel!
+  updateType(input: updateTypeInput!): StatusModel!
 }
 
 input CreateInput {
@@ -352,6 +366,13 @@ input GroupUpdateInput {
 
 input createTypeInput {
   name: String!
+  rootType: String
+  parentType: String
+}
+
+input updateTypeInput {
+  id: String!
+  name: String
   rootType: String
   parentType: String
 }

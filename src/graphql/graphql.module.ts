@@ -11,7 +11,6 @@ import { join } from 'path';
       context: ({ req }) => {
         return { req }
       },
-      
     })
   ]
 })

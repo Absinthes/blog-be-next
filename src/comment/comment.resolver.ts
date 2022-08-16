@@ -80,37 +80,21 @@ export class CommentResolver {
 
   @ResolveField()
   public async rootComment(@Parent() comment:Comment){
-    if(comment.rootComment){
-      return comment.rootComment
-    }
-    const curComment = await this.commentService.getCommentById(comment.id,['rootComment']);
-    return curComment.rootComment
+    return comment.rootComment
   }
 
   @ResolveField()
   public async parentComment(@Parent() comment:Comment){
-    if(comment.parentComment){
-      return comment.parentComment
-    }
-    const curComment = await this.commentService.getCommentById(comment.id,["parentComment"]);
-    return curComment.parentComment
+    return comment.parentComment
   }
 
   @ResolveField()
   public async childComment(@Parent() comment:Comment){
-    const res =  await this.commentService.getCommentChildren(comment.id)
-    this.chidrenCommentLength.set(comment.id,res.length)
-    return res;
+    return comment.childComment
   }
 
   @ResolveField()
   public async hasChildren(@Parent() comment:Comment){
-    //是否有子评论
-    if(this.chidrenCommentLength.has(comment.id)){
-      return this.chidrenCommentLength.get(comment.id) == 0
-    }
-    const res =  await this.commentService.getCommentChildren(comment.id)
-    this.chidrenCommentLength.set(comment.id,res.length)
-    return res.length == 0;
+     return this.chidrenCommentLength.get(comment.id) == 0
   }
 }
