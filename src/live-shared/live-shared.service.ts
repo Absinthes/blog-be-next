@@ -27,7 +27,7 @@ export class LiveSharedService {
   }
 
   public async list({ offset, limit }: PaginationQuerInput) {
-    return this.liveSharedRepository.find({
+    return this.liveSharedRepository.findAndCount({
       skip: offset,
       take: limit,
     });

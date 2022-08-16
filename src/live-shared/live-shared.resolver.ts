@@ -13,6 +13,7 @@ import { CreateLiveSharedInput } from './dtos/createLiveShared.input';
 import { UpdateLiveSharedInput } from './dtos/updateLiveShared.input';
 import { LiveShared } from './entity/live-shared.entity';
 import { LiveSharedService } from './live-shared.service';
+import { PaginatedLiveShared } from './model/PaginatedLiveShared.model';
 
 @Resolver(() => LiveShared)
 export class LiveSharedResolver {
@@ -26,7 +27,7 @@ export class LiveSharedResolver {
     return await this.liveSharedService.one(id);
   }
 
-  @Query(() => [LiveShared])
+  @Query(() => PaginatedLiveShared)
   public async getLiveSharedList(
     @Args({
       name: 'paginationQuery',
@@ -34,7 +35,8 @@ export class LiveSharedResolver {
     })
     paginationQuery,
   ) {
-    return await this.liveSharedService.list(paginationQuery);
+    const [nodes, total] = await this.liveSharedService.list(paginationQuery);
+    return new PaginatedLiveShared(nodes, total);
   }
 
   @Mutation(() => StatusModel)

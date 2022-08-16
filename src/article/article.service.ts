@@ -23,6 +23,7 @@ export class ArticleService {
       where: {
         id,
       },
+      relations: ['tags']
     });
   }
 
@@ -54,11 +55,12 @@ export class ArticleService {
     };
     const result = await this.Artilce(article.id);
     if (!result) throw new NotFoundException('文章不存在');
-    data.tags = await this.tagsService.findOrInsertTags(1, article.tags);
-    data.groups = await this.groupService.findOrInsertGroups(article.groups);
-    return this.articleRepository.update(
-      article.id,
-      Object.assign(result, data),
+    data.tags && (data.tags = await this.tagsService.findOrInsertTags(1, article.tags));
+    data.groups && (data.groups = await this.groupService.findOrInsertGroups(article.groups));
+    Object.assign(result, data)
+    console.log(result)
+    return this.articleRepository.save(
+      result
     );
   }
 

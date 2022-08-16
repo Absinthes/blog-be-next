@@ -57,6 +57,21 @@ type LiveShared {
   tags: [Tags!]!
 }
 
+type Multimedia {
+  id: ID!
+  title: String!
+  author: String!
+  type: Float!
+  path: String!
+  cover: String!
+  format: String!
+  isOuterLink: Boolean!
+  weight: Float!
+  createTime: String!
+  updateTime: String!
+  tags: [Tags!]!
+}
+
 type PhotoWall {
   id: ID!
   name: String!
@@ -69,11 +84,15 @@ type PhotoWall {
 
 type Tags {
   id: ID!
-  type: Float!
+  type: Int!
   name: String!
   nameEn: String
   weight: Float!
-  createTime: DateTime!
+  createTime: String!
+  articles: [Article!]!
+  photoWalls: [PhotoWall!]!
+  liveShares: [LiveShared!]!
+  multimedias: [Multimedia!]!
 }
 
 type Article {
@@ -88,9 +107,9 @@ type Article {
   isPublic: Boolean!
   createTime: String!
   updateTime: String!
-  tags: [Tags!]
-  groups: [Group!]
-  comments: [Comment!]
+  tags: [Tags!]!
+  groups: [Group!]!
+  comments: [Comment!]!
 }
 
 type Group {
@@ -113,6 +132,11 @@ type ArticleModel {
   comments: [Comment!]!
 }
 
+type PaginatedTags {
+  totalCount: Float!
+  nodes: [Tags!]!
+}
+
 type PaginatedPhotoWall {
   nodes: [PhotoWall!]
   totalCount: Int!
@@ -121,6 +145,16 @@ type PaginatedPhotoWall {
 type CommnetAndCount {
   nodes: [Comment!]
   totalCount: Int!
+}
+
+type PaginatedLiveShared {
+  totalCount: Float!
+  nodes: [LiveShared!]!
+}
+
+type PaginatedGroup {
+  totalCount: Float!
+  nodes: [Group!]!
 }
 
 type FilePath {
@@ -137,6 +171,7 @@ type FileSuccessModel {
 type Type {
   id: ID!
   name: String!
+  createTime: String!
   rootType: Type
   parentType: Type
   childType: [Type!]
@@ -149,7 +184,7 @@ type Query {
   getArticleList(limit: Int!, offset: Int!): ArticleAllModel!
   getArticleById(id: String!): Article!
   getAllTag(type: Float!): [Tags!]!
-  getTagsList(paginationQuery: PaginationQuerInput!, type: Int): [Tags!]!
+  getTagsList(paginationQuery: PaginationQuerInput!, type: Int): PaginatedTags!
   getPhotoWallList(input: PaginationQuerInput!): PaginatedPhotoWall!
   getPhotoWallById(id: String!): PhotoWall!
   getCommentByArticleId(ariticleId: String!): CommnetAndCount!
@@ -157,7 +192,8 @@ type Query {
   getCommnet(input: PaginationQuerInput!): CommnetAndCount!
   getCommentByRoot(input: PaginationQuerInput!): CommnetAndCount!
   getLiveSharedById(id: String!): LiveShared!
-  getLiveSharedList(paginationQuery: PaginationQuerInput!): [LiveShared!]!
+  getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
+  getGroupList(input: PaginationQuerInput!): PaginatedGroup!
   getTypeByRoot(input: PaginationQuerInput!): [Type!]!
 }
 
@@ -175,9 +211,9 @@ type Mutation {
   createAccount(input: CreateInput!): StatusModel!
   createArticle(articleInsertInput: ArticleInsertInput!): Article!
   deleteArticle(id: String!): StatusModel!
-  updateArticle(input: ArticleUpdateInput!): Article!
-  createTag(input: TagsCreateInput!): Tags!
-  updateTag(input: TagsUpdateInput!): Tags!
+  updateArticle(input: ArticleUpdateInput!): StatusModel!
+  createTag(input: TagsCreateInput!): StatusModel!
+  updateTag(input: TagsUpdateInput!): StatusModel!
   deleteTag(id: String!): StatusModel!
   addPhotoToWall(createPhotoInput: CreatePhotoInput!): PhotoWall!
   addPhotoWallList(createPhotoList: [CreatePhotoInput!]!): StatusModel!
@@ -189,6 +225,9 @@ type Mutation {
   createLiveShared(createLiveShared: CreateLiveSharedInput!): StatusModel!
   updateLiveShared(updateLiveShared: UpdateLiveSharedInput!): StatusModel!
   deleteLiveShared(id: String!): StatusModel!
+  createGroup(input: GroupCreateInput!): StatusModel!
+  updateGroup(input: GroupUpdateInput!): StatusModel!
+  deleteGroup(id: ID!): StatusModel!
   singleUpload(file: Upload!): FileSuccessModel!
   createType(input: createTypeInput!): StatusModel!
 }
@@ -211,17 +250,17 @@ input ArticleInsertInput {
 
 input ArticleUpdateInput {
   id: ID!
-  weight: Float!
-  title: String!
+  weight: Float
+  title: String
   summary: String
   content: String
-  isPublic: Boolean!
+  isPublic: Boolean
   tags: [String!]
   groups: [String!]
 }
 
 input TagsCreateInput {
-  type: Float!
+  type: Int!
   name: String!
   nameEn: String
   weight: Float
@@ -294,10 +333,21 @@ input UpdateLiveSharedInput {
   id: ID!
   file: Upload
   weight: Float
-  content: String!
+  content: String
   address: String
   emotion: String
   tags: [String!]
+}
+
+input GroupCreateInput {
+  name: String!
+  nameEn: String
+}
+
+input GroupUpdateInput {
+  id: ID!
+  name: String!
+  nameEn: String
 }
 
 input createTypeInput {

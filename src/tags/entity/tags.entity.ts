@@ -1,5 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { IsNotEmpty } from 'class-validator';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Article } from 'src/article/entity/article.entity';
 import { LiveShared } from 'src/live-shared/entity/live-shared.entity';
 import { Multimedia } from 'src/multimedia/entity/multimedia.entity';
@@ -23,13 +22,13 @@ export class Tags {
 
   @Column({
     comment: '1.Article 2.PhotoWall 3.LiveShare 4.multimedia',
+    type: 'int'
   })
-  @Field()
+  @Field(() => Int)
   type: number;
 
   @Column()
   @Field()
-  @IsNotEmpty()
   name: string;
 
   @Column({
@@ -52,18 +51,22 @@ export class Tags {
     default: () => 'CURRENT_TIMESTAMP(6)',
     comment: '创建时间',
   })
-  @Field()
+  @Field(() => String)
   createTime?: Date;
 
   @ManyToMany(() => Article, (article) => article.tags)
+  @Field(() => [Article])
   articles?: Article[];
 
   @ManyToMany(() => PhotoWall, (photoWall) => photoWall.tags)
+  @Field(() => [PhotoWall])
   photoWalls?: PhotoWall[];
 
   @ManyToMany(() => LiveShared, (liveShared) => liveShared.tags)
+  @Field(() => [LiveShared])
   liveShares?: LiveShared[];
 
   @ManyToMany(() => Multimedia, (multimedia) => multimedia.tags)
+  @Field(() => [Multimedia])
   multimedias?: Multimedia[];
 }

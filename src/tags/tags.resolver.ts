@@ -6,6 +6,7 @@ import { StatusModel } from 'src/shared/model/status.modle';
 import { TagsCreateInput } from './dtos/tags.create.input';
 import { TagsUpdateInput } from './dtos/tags.update.input';
 import { Tags } from './entity/tags.entity';
+import { PaginatedTags } from './model/PaginatedTags.model';
 import { TagsService } from './tags.service';
 
 @Resolver()
@@ -13,13 +14,13 @@ export class TagsResolver {
   constructor(private readonly tagsService: TagsService) {}
 
   @Query(() => [Tags])
-  @UseGuards(GraphQLAuthGuard)
+  // @UseGuards(GraphQLAuthGuard)
   public async getAllTag(@Args('type') type: number) {
     return await this.tagsService.allByType(type);
   }
 
-  @Query(() => [Tags])
-  @UseGuards(GraphQLAuthGuard)
+  // @UseGuards(GraphQLAuthGuard)
+  @Query(() => PaginatedTags)
   public async getTagsList(
     @Args({
       name: 'paginationQuery',
@@ -33,11 +34,12 @@ export class TagsResolver {
     })
     type?,
   ) {
-    return await this.tagsService.list(paginationQuery, type);
+    let [ nodes, totalCount ] = await this.tagsService.list(paginationQuery, type);
+    return new PaginatedTags(nodes, totalCount)
   }
 
-  @Mutation(() => Tags)
-  @UseGuards(GraphQLAuthGuard)
+  @Mutation(() => StatusModel)
+  // @UseGuards(GraphQLAuthGuard)
   public async createTag(
     @Args({
       name: 'input',
@@ -45,11 +47,12 @@ export class TagsResolver {
     })
     input,
   ) {
-    return await this.tagsService.create(input);
+    await this.tagsService.create(input);
+    return new StatusModel(200, '创建成功')
   }
 
-  @Mutation(() => Tags)
-  @UseGuards(GraphQLAuthGuard)
+  @Mutation(() => StatusModel)
+  // @UseGuards(GraphQLAuthGuard)
   public async updateTag(
     @Args({
       name: 'input',
@@ -57,11 +60,12 @@ export class TagsResolver {
     })
     input,
   ) {
-    return await this.tagsService.update(input);
+    await this.tagsService.update(input);
+    return new StatusModel(200, '更新成功')
   }
 
   @Mutation(() => StatusModel)
-  @UseGuards(GraphQLAuthGuard)
+  // @UseGuards(GraphQLAuthGuard)
   public async deleteTag(@Args('id') id: string) {
     await this.tagsService.delete(id);
     return new StatusModel(200, '删除成功');

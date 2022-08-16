@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
 import { Repository } from 'typeorm';
 import { GroupCreateInput } from './dtos/group.create.input';
 import { Group } from './entity/group.entity';
@@ -27,12 +28,16 @@ export class GroupService {
     });
   }
 
-  public async list() {
-
+  public async list(input: PaginationQuerInput) {
+    const { limit, offset } = input
+    return this.groupRepository.findAndCount({
+      skip: offset,
+      take: limit
+    })
   }
 
   public async create(group: GroupCreateInput) {
-    const prev = this.groupByName(group.name)
+    const prev = await this.groupByName(group.name)
     if(prev) throw new BadRequestException('group已存在')
     const result = this.groupRepository.create(group)
     return this.groupRepository.save(result)
@@ -72,6 +77,7 @@ export class GroupService {
   public async findOrInsertGroup(group: GroupCreateInput) {
     const prev = await this.groupByName(group.name);
     if (prev) return prev;
-    return this.create(group)
+    let res = this.groupRepository.create(group)
+    return this.groupRepository.save(res)
   }
 }
