@@ -18,7 +18,7 @@ import {
 export class Article {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id: string;
+  id?: string;
 
   @Column()
   @Field()
@@ -91,15 +91,15 @@ export class Article {
 
   @ManyToMany(() => Tags, (tags) => tags.articles, { cascade: true })
   @JoinTable()
-  @Field(() => [Tags], { nullable: true })
+  @Field(() => [Tags])
   tags?: Tags[];
 
   @ManyToMany(() => Group, (group) => group.articles, { cascade: true })
   @JoinTable()
-  @Field(() => [Group], { nullable: true })
+  @Field(() => [Group])
   groups?: Group[];
 
   @OneToMany(() => Comment, (comment) => comment.article, { cascade: true })
-  @Field(() => [Comment], { nullable: true })
+  @Field(() => [Comment])
   comments: Comment[];
 }

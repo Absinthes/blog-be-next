@@ -18,7 +18,7 @@ import { ArticleInsertInput } from './dto/article.insert.input';
 import { StatusModel } from 'src/shared/model/status.modle';
 import { ArticleUpdateInput } from './dto/article.update.input';
 import { GroupService } from 'src/group/group.service';
-import { PaginatedArticle } from './model/PaginatedArticle';
+import { PaginatedArticle } from './model/PaginatedArticle.model';
 import { CommentService } from 'src/comment/comment.service';
 
 @Resolver(() => Article)
@@ -66,7 +66,7 @@ export class ArticleResolver {
     return new StatusModel(200, '删除成功');
   }
 
-  @Mutation(() => Article)
+  @Mutation(() => StatusModel)
   // @UseGuards(GraphQLAuthGuard)
   public async updateArticle(
     @Args({
@@ -75,7 +75,8 @@ export class ArticleResolver {
     })
     input,
   ) {
-    return await this.articleService.update(input);
+    await this.articleService.update(input);
+    return new StatusModel(200, '更新成功')
   }
 
   @ResolveField()

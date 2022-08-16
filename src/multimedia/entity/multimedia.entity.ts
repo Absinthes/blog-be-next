@@ -1,3 +1,4 @@
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Tags } from 'src/tags/entity/tags.entity';
 import {
   Column,
@@ -10,45 +11,59 @@ import {
 } from 'typeorm';
 
 @Entity()
+@ObjectType()
 export class Multimedia {
   @PrimaryGeneratedColumn()
+  @Field(() => ID)
   id: string;
 
   @Column()
+  @Field()
   title: string;
 
   @Column()
+  @Field()
   author: string;
 
   @Column({
     comment: '1.视频 2.音乐',
   })
+  @Field()
   type: number;
 
   @Column()
+  @Field()
   path: string;
 
   @Column()
+  @Field()
   cover: string;
 
   @Column()
+  @Field()
   format: string;
 
   @Column()
+  @Field()
   isOuterLink: boolean;
 
   @Column({
     type: 'float',
+    default: 0
   })
+  @Field()
   weight: number;
 
   @CreateDateColumn()
-  createTime: Date;
+  @Field()
+  createTime: string;
 
   @UpdateDateColumn()
-  updateTime: Date;
+  @Field()
+  updateTime: string;
 
   @ManyToMany(() => Tags, (tags) => tags.multimedias)
   @JoinTable()
+  @Field(() => [Tags])
   tags: Tags[];
 }

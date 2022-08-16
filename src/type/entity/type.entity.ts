@@ -19,6 +19,14 @@ export class Type {
   @Column()
   @Field(() => String)
   name: string;
+  
+  @Field(() => String)
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    comment: '创建时间',
+  })
+  createTime: Date;
 
   @Field(() => String)
   @CreateDateColumn({
