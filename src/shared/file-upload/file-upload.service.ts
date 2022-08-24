@@ -25,6 +25,7 @@ export class FileUploadService {
       fileNameList.join('.'),
       file.createReadStream(),
     );
+    relative = relative.replace(/\\/g, '/')
     return {
       path: relative,
       fullPath: this.configService.getServiceURL() + relative,

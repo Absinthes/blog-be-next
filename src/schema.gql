@@ -52,20 +52,9 @@ type LiveShared {
   emotion: String
   illustration: String
   weight: Float
-  createTime: DateTime!
-  updateTime: DateTime!
-  tags: [Tags!]!
-}
-
-type Type {
-  id: ID!
-  name: String!
   createTime: String!
-  rootType: Type
-  parentType: Type
-  childType: [Type!]
-  photos: [PhotoWall!]!
-  hasChildren: Boolean!
+  updateTime: String!
+  tags: [Tags!]!
 }
 
 type Multimedia {
@@ -81,6 +70,17 @@ type Multimedia {
   createTime: String!
   updateTime: String!
   tags: [Tags!]!
+}
+
+type Type {
+  id: ID!
+  name: String!
+  createTime: String!
+  rootType: Type
+  parentType: Type
+  childType: [Type!]
+  photos: [PhotoWall!]!
+  hasChildren: Boolean!
 }
 
 type PhotoWall {
@@ -180,14 +180,9 @@ type FileSuccessModel {
   nodes: FilePath
 }
 
-type Type {
-  id: ID!
-  name: String!
-  createTime: String!
-  rootType: Type
-  parentType: Type
-  childType: [Type!]
-  hasChildren: Boolean!
+type TypeAndCount {
+  nodes: [Type!]
+  totalCount: Int!
 }
 
 type Query {
@@ -204,7 +199,8 @@ type Query {
   getCommnet(input: PaginationQuerInput!): CommnetAndCount!
   getCommentByRoot(input: PaginationQuerInput!): CommnetAndCount!
   getLiveSharedById(id: String!): LiveShared!
-  getLiveSharedList(paginationQuery: PaginationQuerInput!): [LiveShared!]!
+  getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
+  getGroupList(input: PaginationQuerInput!): PaginatedGroup!
   getTypeByRoot(input: PaginationQuerInput!): TypeAndCount!
   getTypeById(id: String!): Type!
 }

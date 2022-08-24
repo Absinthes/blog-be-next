@@ -28,14 +28,6 @@ export class Type {
   })
   createTime: Date;
 
-  @Field(() => String)
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    comment: '创建时间',
-  })
-  createTime: Date;
-
   @ManyToOne(() => Type, (type) => type.childType, {
     nullable: true,
     onDelete: 'CASCADE',

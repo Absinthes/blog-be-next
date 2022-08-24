@@ -51,7 +51,7 @@ export class LiveSharedService {
     let filePath: FilePathType;
     let liveShared = await this.one(input.id);
     input.file &&
-      (filePath = await this.fileUploadService.fileUpload(input.file));
+      (filePath = await this.fileUploadService.fileUpload(await input.file));
     let tags = await this.tagsService.findOrInsertTags(3, input.tags)
     liveShared = {
       ...liveShared,

@@ -48,7 +48,7 @@ export class LiveShared {
     default: () => 'CURRENT_TIMESTAMP(6)',
     comment: '创建时间',
   })
-  @Field()
+  @Field(() => String)
   createTime: Date;
 
   @UpdateDateColumn({
@@ -57,7 +57,7 @@ export class LiveShared {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
     comment: '更新时间',
   })
-  @Field()
+  @Field(() => String)
   updateTime: Date;
 
   @ManyToMany(() => Tags, (tags) => tags.liveShares, { cascade: true })
