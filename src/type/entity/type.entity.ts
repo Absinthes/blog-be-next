@@ -13,28 +13,20 @@ import {
 @ObjectType()
 export class Type {
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => ID)
+  @Field(() => ID,{nullable:true})
   id: string;
 
   @Column()
-  @Field(() => String)
+  @Field(() => String,{nullable:true})
   name: string;
   
-  @Field(() => String)
+  @Field(() => String,{nullable:true})
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
     comment: '创建时间',
   })
   createTime: Date;
-
-  @Field(() => String)
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    comment: '创建时间',
-  })
-  createTime: Date;
 
   @ManyToOne(() => Type, (type) => type.childType, {
     nullable: true,

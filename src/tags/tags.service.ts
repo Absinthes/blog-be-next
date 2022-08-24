@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
-import { Repository } from 'typeorm';
+import { IsNull, Repository, Like } from 'typeorm';
 import { TagsCreateInput } from './dtos/tags.create.input';
 import { TagsUpdateInput } from './dtos/tags.update.input';
 import { Tags, TagsType } from './entity/tags.entity';
@@ -12,54 +12,61 @@ export class TagsService {
     @InjectRepository(Tags)
     private readonly tagsRepository: Repository<Tags>,
   ) {}
-  
-  public async allByType(type: number){
+
+  public async allByType(type: number) {
     return this.tagsRepository.find({
       where: {
-        type
-      }
-    })
+        type,
+      },
+    });
   }
 
   public async list(paginationQuery: PaginationQuerInput, type?: number) {
-    const { limit, offset } = paginationQuery
+    const { limit, offset } = paginationQuery;
     return this.tagsRepository.findAndCount({
       skip: offset,
       take: limit,
       where: {
-        type
-      }
-    })
+        type,
+      },
+    });
+  }
+
+  public async nameVague(name: string) {
+    return this.tagsRepository
+      .createQueryBuilder('tag')
+      .where('tag.name like :name', { name: `%${name}%` })
+      .getMany();
   }
 
   public async create(input: TagsCreateInput) {
-    let tagResult = this.tagsRepository.create(input)
-    return this.tagsRepository.save(tagResult)
+    let tagResult = this.tagsRepository.create(input);
+    return this.tagsRepository.save(tagResult);
   }
 
-  public async update(input: TagsUpdateInput){
-    return this.tagsRepository.update(input.id, input)
+  public async update(input: TagsUpdateInput) {
+    return this.tagsRepository.update(input.id, input);
   }
 
   public async delete(id: string) {
-    const tag = await this.TagById(id)
-    return this.tagsRepository.remove(tag)
+    const tag = await this.TagById(id);
+    return this.tagsRepository.remove(tag);
   }
-  
+
   public async TagById(id: string) {
     return this.tagsRepository.findOne({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 
-  public async TagByName(name: string){
+  public async TagByName(name: string) {
     return this.tagsRepository.findOne({
       where: {
-        name
-      }
-    })
+        name,
+      },
+    });
   }
 
   public async ArticleTags(id: string) {
@@ -76,30 +83,30 @@ export class TagsService {
     return this.tagsRepository.find({
       where: {
         photoWalls: {
-          id
-        }
-      }
-    })
+          id,
+        },
+      },
+    });
   }
 
   public async liveSharedTags(id: string) {
     return this.tagsRepository.find({
       where: {
         liveShares: {
-          id
-        }
-      }
-    })
+          id,
+        },
+      },
+    });
   }
 
   /**
-   * 
+   *
    * @param type 1.Article 2.PhotoWall 3.LiveShare 4.multimedia
-   * @param tags 
-   * @returns 
+   * @param tags
+   * @returns
    */
   public async findOrInsertTags(type: TagsType, tags: string[]) {
-    if (!Array.isArray(tags) || tags.length == 0) return []
+    if (!Array.isArray(tags) || tags.length == 0) return [];
     let res: Tags[] = [];
     for (let i = 0; i < tags.length; i++) {
       res.push(
@@ -109,13 +116,13 @@ export class TagsService {
         }),
       );
     }
-    return res
+    return res;
   }
 
   public async findOrInsertTag(tag: Tags) {
-    const prev = await this.TagByName(tag.name)
-    if(prev) return prev
-    const tagResult = this.tagsRepository.create(tag)
-    return this.tagsRepository.save(tagResult)
+    const prev = await this.TagByName(tag.name);
+    if (prev) return prev;
+    const tagResult = this.tagsRepository.create(tag);
+    return this.tagsRepository.save(tagResult);
   }
 }

@@ -11,8 +11,7 @@ import { FilePathType } from './model/filePath.model';
 export class FileUploadService {
   constructor(private readonly configService: ConfigService) {}
 
-  async fileUpload(file: FileUpload): Promise<FilePathType> {
-    const dirName = '/PhotoWall';
+  async fileUpload(file: FileUpload,dirName:string = "/PhotoWall" ): Promise<FilePathType> {
     const rootDir = resolve(__dirname, '../../../public');
     const hash = createHash('sha256')
       .update(file.filename + Date.now())

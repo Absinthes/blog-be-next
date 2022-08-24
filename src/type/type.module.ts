@@ -6,6 +6,7 @@ import { Type } from './entity/type.entity';
 
 @Module({
   imports:[TypeOrmModule.forFeature([Type])],
-  providers: [TypeService, TypeResolver]
+  providers: [TypeService, TypeResolver],
+  exports:[TypeService]
 })
 export class TypeModule {}

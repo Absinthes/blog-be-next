@@ -23,7 +23,6 @@ export class ArticleService {
       where: {
         id,
       },
-      relations: ['tags']
     });
   }
 

@@ -26,6 +26,11 @@ export class TypeResolver {
     return await this.typeService.getTypeById(id,['childType','parentType','rootType'])
   }
 
+  @Query(() => Type)
+  public async getTypeByNameAndRoot(@Args({name:"name",type:() => String}) name){
+    return await this.typeService.getTypeByName(name) || {}
+  }
+
   @Mutation(() => StatusModel)
   public async createType(@Args({name:"input",type:() => createTypeInput}) input){
     //新增分类

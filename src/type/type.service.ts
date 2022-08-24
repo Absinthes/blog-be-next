@@ -43,6 +43,16 @@ export class TypeService {
     })
   }
 
+  public async getTypeByPhoto(id:string){
+    return await this.TypeRepository.findOne({
+      where:{
+        photos:{
+          id
+        }
+      }
+    })
+  }
+
   public async getTypeParentById(id: string) {
     return await this.TypeRepository.createQueryBuilder('type')
       .select('rootType')

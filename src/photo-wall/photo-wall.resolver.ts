@@ -11,6 +11,7 @@ import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
 import { FileSuccessModel } from 'src/shared/file-upload/model/fileSuccess.model';
 import { StatusModel } from 'src/shared/model/status.modle';
 import { TagsService } from 'src/tags/tags.service';
+import { TypeService } from 'src/type/type.service';
 import { CreatePhotoInput } from './dtos/createPhoto.input';
 import { UpdatePhotoWallInput } from './dtos/updatePhotoWall.input';
 import { PhotoWall } from './entity/photo-wall.entity';
@@ -22,6 +23,7 @@ export class PhotoWallResolver {
   constructor(
     private readonly photoWallService: PhotoWallService,
     private readonly tagsService: TagsService,
+    private readonly typeService:TypeService
   ) {}
 
   @Query(() => PaginatedPhotoWall)
@@ -34,12 +36,12 @@ export class PhotoWallResolver {
     return new PaginatedPhotoWall(nodes, totalCount);
   }
 
-  @Query(() => PhotoWall)
-  public async getPhotoWallById(@Args('id') id: string) {
-    return await this.photoWallService.one(id)
-  }
+  // @Query(() => PhotoWall)
+  // public async getPhotoWallById(@Args('id') id: string) {
+  //   return await this.photoWallService.one(id)
+  // }
 
-  @Mutation(() => PhotoWall)
+  @Mutation(() => StatusModel)
   public async addPhotoToWall(
     @Args({
       name: 'createPhotoInput',
@@ -47,7 +49,8 @@ export class PhotoWallResolver {
     })
     createPhotoInput,
   ) {
-    return await this.photoWallService.create(createPhotoInput);
+     await this.photoWallService.create(createPhotoInput);
+     return new StatusModel(200,"添加成功！")
   }
 
   @Mutation(() => StatusModel)
@@ -85,7 +88,15 @@ export class PhotoWallResolver {
 
   @ResolveField()
   public async tags(@Parent() photoWall: PhotoWall) {
+    if(photoWall.tags) return photoWall.tags
     const { id } = photoWall;
     return await this.tagsService.photoWallTags(id);
+  }
+
+  @ResolveField()
+  public async type(@Parent() photoWall: PhotoWall){
+    if(photoWall.type) return photoWall.type
+    const { id } = photoWall;
+    return  await this.typeService.getTypeByPhoto(id)
   }
 }

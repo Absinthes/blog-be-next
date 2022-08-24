@@ -38,6 +38,11 @@ export class TagsResolver {
     return new PaginatedTags(nodes, totalCount)
   }
 
+  @Query(() => [Tags])
+  public async getTagByVagueName(@Args({name:"name",type:() => String}) name){
+    return await this.tagsService.nameVague(name)
+  }
+
   @Mutation(() => StatusModel)
   // @UseGuards(GraphQLAuthGuard)
   public async createTag(
