@@ -11,6 +11,7 @@ import {
 } from 'src/shared/file-upload/model/filePath.model';
 import { deleteFile } from 'src/shared/nodejs';
 import { TagsService } from 'src/tags/tags.service';
+import { TypeService } from 'src/type/type.service';
 import { Repository } from 'typeorm';
 import { CreatePhotoInput } from './dtos/createPhoto.input';
 import { UpdatePhotoWallInput } from './dtos/updatePhotoWall.input';
@@ -24,6 +25,7 @@ export class PhotoWallService {
     private readonly fileUploadService: FileUploadService,
     private readonly configService: ConfigService,
     private readonly tagsService: TagsService,
+    private readonly typeService:TypeService
   ) {}
 
   public async one(id: string) {
@@ -40,6 +42,7 @@ export class PhotoWallService {
       take: limit,
       relations: {
         tags: true,
+        type:true
       },
     });
   }
@@ -50,10 +53,12 @@ export class PhotoWallService {
     if (input.tags && input.tags.length > 0) {
       tags = await this.tagsService.findOrInsertTags(2, input.tags);
     }
+    let type = await this.typeService.getTypeById(input.type)
     const result = this.photoWallRepository.create({
       ...input,
       path,
       tags,
+      type
     });
     return await this.photoWallRepository.save(result);
   }
@@ -79,11 +84,13 @@ export class PhotoWallService {
       filePath = await this.fileUploadService.fileUpload(await input.file);
     }
     let tags = await this.tagsService.findOrInsertTags(2, input.tags)
+    let type = await this.typeService.getTypeById(input.type)
     photoWall = {
       ...photoWall,
       ...input,
       path: filePath?.path,
       tags,
+      type
     };
     return await this.photoWallRepository.save(photoWall);
   }

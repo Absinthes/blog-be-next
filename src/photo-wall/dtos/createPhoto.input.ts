@@ -9,4 +9,5 @@ export class CreatePhotoInput {
   originUrl?: string;
   author?: string;
   tags?: string[];
+  type?:string
 }

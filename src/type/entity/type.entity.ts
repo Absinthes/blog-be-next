@@ -13,14 +13,14 @@ import {
 @ObjectType()
 export class Type {
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => ID)
+  @Field(() => ID,{nullable:true})
   id: string;
 
   @Column()
-  @Field(() => String)
+  @Field(() => String,{nullable:true})
   name: string;
   
-  @Field(() => String)
+  @Field(() => String,{nullable:true})
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',

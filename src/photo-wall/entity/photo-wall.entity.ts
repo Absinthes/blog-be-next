@@ -44,6 +44,6 @@ export class PhotoWall {
   tags: Tags[];
 
   @ManyToOne(() => Type,(type) => type.photos,{nullable:true,onDelete:"CASCADE"})
-  @Field(() => Type)
+  @Field(() => Type,{ nullable: true })
   type:Type
 }

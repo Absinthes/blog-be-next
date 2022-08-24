@@ -8,5 +8,6 @@ import { ArticleModule } from 'src/article/article.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Comment]),ArticleModule],
   providers: [CommentService, CommentResolver],
+  exports:[CommentService]
 })
 export class CommentModule {}

@@ -26,7 +26,7 @@ export class CommentService {
   ) {}
 
   public async getCommentByArticleId(id: string) {
-    return this.commnetRepository.findAndCount({
+    return this.commnetRepository.findAndCount({ 
       where: {
         article: {
           id,
@@ -70,10 +70,10 @@ export class CommentService {
     return await this.commnetRepository
       .createQueryBuilder('comment')
       .leftJoinAndSelect("comment.article","article")
-      .leftJoinAndSelect("comment.childComment","childComment")
-      .leftJoinAndSelect("childComment.article","childArticle")
-      .leftJoinAndSelect("childComment.rootComment","childRootComment")
-      .leftJoinAndSelect("childComment.parentComment","childParentComment")
+      // .leftJoinAndSelect("comment.childComment","childComment")
+      // .leftJoinAndSelect("childComment.article","childArticle")
+      // .leftJoinAndSelect("childComment.rootComment","childRootComment")
+      // .leftJoinAndSelect("childComment.parentComment","childParentComment")
       .where('comment.rootComment IS NULL')
       .limit(limit)
       .offset(offset)
