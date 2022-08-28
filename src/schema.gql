@@ -52,13 +52,8 @@ type LiveShared {
   emotion: String
   illustration: String
   weight: Float
-<<<<<<< HEAD
   createTime: String!
   updateTime: String!
-=======
-  createTime: DateTime!
-  updateTime: DateTime!
->>>>>>> 92c376d37cff917d66987043e2555b21ad8350c0
   tags: [Tags!]!
 }
 
@@ -78,15 +73,9 @@ type Multimedia {
 }
 
 type Type {
-<<<<<<< HEAD
-  id: ID!
-  name: String!
-  createTime: String!
-=======
   id: ID
   name: String
   createTime: String
->>>>>>> 92c376d37cff917d66987043e2555b21ad8350c0
   rootType: Type
   parentType: Type
   childType: [Type!]
@@ -196,10 +185,6 @@ type FileSuccessModel {
   nodes: FilePath
 }
 
-<<<<<<< HEAD
-type TypeAndCount {
-  nodes: [Type!]
-=======
 type FriendsChain {
   id: ID!
   name: String!
@@ -209,7 +194,6 @@ type FriendsChain {
 
 type PaginatedFriendsChain {
   nodes: [FriendsChain!]
->>>>>>> 92c376d37cff917d66987043e2555b21ad8350c0
   totalCount: Int!
 }
 
@@ -232,12 +216,7 @@ type Query {
   getLiveSharedById(id: String!): LiveShared!
   getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
   getGroupList(input: PaginationQuerInput!): PaginatedGroup!
-<<<<<<< HEAD
-  getTypeByRoot(input: PaginationQuerInput!): TypeAndCount!
-  getTypeById(id: String!): Type!
-=======
   getFriendsChainList(input: PaginationQuerInput!): PaginatedFriendsChain!
->>>>>>> 92c376d37cff917d66987043e2555b21ad8350c0
 }
 
 input LoginInput {

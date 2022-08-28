@@ -13,7 +13,7 @@ export class TagsService {
     private readonly tagsRepository: Repository<Tags>,
   ) {}
 
-  public async allByType(type: number) {
+  public async allByType(type: TagsType) {
     return this.tagsRepository.find({
       where: {
         type,
