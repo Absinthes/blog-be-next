@@ -31,6 +31,10 @@ export class Article {
   @Field()
   viewNum: number;
 
+  @Column({ nullable: true })
+  @Field({ nullable: true})
+  pic: string
+
   @Column({
     type: 'text',
     nullable: true,

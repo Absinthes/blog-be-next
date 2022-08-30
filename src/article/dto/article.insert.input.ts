@@ -1,14 +1,17 @@
 import { Field, Float, InputType, ObjectType } from "@nestjs/graphql";
 import { IsNotEmpty } from "class-validator";
+import { GraphQLUpload, FileUpload } from "graphql-upload";
 
 @InputType()
 export class ArticleInsertInput {
-  @Field(() => Float)
-  weight: number
   title: string
+  isPublic?: boolean
+  @Field(() => Float)
+  weight?: number
   summary?: string
   content?: string
-  isPublic: boolean
   tags?: string[]
   groups?: string[]
+  @Field(() => GraphQLUpload)
+  file?: FileUpload;
 }

@@ -47,7 +47,7 @@ export class ArticleResolver {
     return this.articleService.Artilce(id);
   }
 
-  @Mutation(() => Article)
+  @Mutation(() => StatusModel)
   // @UseGuards(GraphQLAuthGuard)
   public async createArticle(
     @Args({
@@ -56,7 +56,8 @@ export class ArticleResolver {
     })
     articleInsertInput,
   ) {
-    return await this.articleService.insert(articleInsertInput);
+    await this.articleService.insert(articleInsertInput);
+    return new StatusModel(200, '创建成功')
   }
 
   @Mutation(() => StatusModel)

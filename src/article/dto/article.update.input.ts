@@ -1,4 +1,5 @@
 import { Field, Float, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { GraphQLUpload, FileUpload } from "graphql-upload";
 
 @InputType()
 export class ArticleUpdateInput {
@@ -12,4 +13,6 @@ export class ArticleUpdateInput {
   isPublic?: boolean
   tags?: string[]
   groups?: string[]
+  @Field(() => GraphQLUpload)
+  file?: FileUpload;
 }

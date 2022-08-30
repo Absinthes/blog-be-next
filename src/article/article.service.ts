@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GroupService } from 'src/group/group.service';
 import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
+import { FileUploadService } from 'src/shared/file-upload/file-upload.service';
+import { FilePathType } from 'src/shared/file-upload/model/filePath.model';
 import { Tags } from 'src/tags/entity/tags.entity';
 import { TagsService } from 'src/tags/tags.service';
 import { Repository } from 'typeorm';
@@ -16,6 +18,7 @@ export class ArticleService {
     private readonly articleRepository: Repository<Article>,
     private readonly tagsService: TagsService,
     private readonly groupService: GroupService,
+    private readonly fileUploadService: FileUploadService,
   ) {}
 
   public async Artilce(id: string) {
@@ -34,7 +37,9 @@ export class ArticleService {
   }
 
   public async insert(insertInput: ArticleInsertInput) {
-    let tags, groups;
+    let tags, groups, filePath: FilePathType;
+    insertInput.file &&
+      (filePath = await this.fileUploadService.fileUpload(insertInput.file));
     insertInput.tags &&
       (tags = await this.tagsService.findOrInsertTags(1, insertInput.tags));
     insertInput.groups &&
@@ -44,24 +49,28 @@ export class ArticleService {
       tags,
       contentNum: insertInput.content?.length,
       groups,
+      pic: filePath?.path,
     });
     return await this.articleRepository.save(article);
   }
 
   public async update(article: ArticleUpdateInput) {
+    let filePath: FilePathType;
     const data: any = {
       ...article,
     };
     const result = await this.Artilce(article.id);
     if (!result) throw new NotFoundException('文章不存在');
-    data.tags &&
-      (data.tags = await this.tagsService.findOrInsertTags(1, article.tags));
+    if (article.file) {
+      filePath = await this.fileUploadService.fileUpload(await article.file);
+      data.pic = filePath.path;
+    }
+    data.tags = await this.tagsService.findOrInsertTags(1, article.tags);
     data.groups &&
       (data.groups = await this.groupService.findOrInsertGroups(
         article.groups,
       ));
     Object.assign(result, data);
-    console.log(result);
     return this.articleRepository.save(result);
   }
 
