@@ -5,11 +5,11 @@ import { IsOptional, IsPositive } from 'class-validator';
 export class PaginationQuerInput {
   @IsOptional()
   @IsPositive()
-  @Field()
-  limit: number;
+  @Field({ nullable: true })
+  limit?: number;
 
   @IsOptional()
   @IsPositive()
-  @Field()
-  offset: number;
+  @Field({ nullable: true })
+  offset?: number;
 }

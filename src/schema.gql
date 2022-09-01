@@ -80,6 +80,7 @@ type Type {
   parentType: Type
   childType: [Type!]
   photos: [PhotoWall!]!
+  articles: [Article!]!
   hasChildren: Boolean!
 }
 
@@ -123,6 +124,7 @@ type Article {
   tags: [Tags!]!
   groups: [Group!]!
   comments: [Comment!]!
+  type: Type
 }
 
 type Group {
@@ -159,6 +161,11 @@ type PaginatedTags {
   nodes: [Tags!]!
 }
 
+type TypeAndCount {
+  nodes: [Type!]
+  totalCount: Int!
+}
+
 type ArticleAllModel {
   totalCount: Float!
   nodes: [Article!]!
@@ -169,11 +176,6 @@ type ArticleModel {
   tags: [Tags!]!
   group: [Group!]!
   comments: [Comment!]!
-}
-
-type TypeAndCount {
-  nodes: [Type!]
-  totalCount: Int!
 }
 
 type PaginatedPhotoWall {
@@ -201,8 +203,10 @@ type PaginatedFriendsChain {
 type Query {
   login(input: LoginInput!): Token!
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
-  getArticleList(limit: Int!, offset: Int!): ArticleAllModel!
+  getArticleList(limit: Int, offset: Int): ArticleAllModel!
   getArticleById(id: String!): Article!
+  getArticleByTagId(id: String!, pagination: PaginationQuerInput): ArticleAllModel!
+  getArticleByTypeId(id: String!, isRoot: Boolean, pagination: PaginationQuerInput): ArticleAllModel!
   getAllTag(type: Float!): [Tags!]!
   getTagsList(paginationQuery: PaginationQuerInput!, type: Int): PaginatedTags!
   getTagByVagueName(name: String!): [Tags!]!
@@ -211,10 +215,10 @@ type Query {
   getCommentByID(id: String!): Comment!
   getCommnet(input: PaginationQuerInput!): CommnetAndCount!
   getCommentByRoot(input: PaginationQuerInput!): CommnetAndCount!
-  getPhotoWallList(input: PaginationQuerInput!): PaginatedPhotoWall!
-  getTypeByRoot(input: PaginationQuerInput!): TypeAndCount!
+  getTypeByRoot(input: PaginationQuerInput): TypeAndCount!
   getTypeById(id: String!): Type!
   getTypeByNameAndRoot(name: String!): Type!
+  getPhotoWallList(input: PaginationQuerInput!): PaginatedPhotoWall!
   getLiveSharedById(id: String!): LiveShared!
   getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
   getFriendsChainList(input: PaginationQuerInput!): PaginatedFriendsChain!
@@ -226,8 +230,8 @@ input LoginInput {
 }
 
 input PaginationQuerInput {
-  limit: Float!
-  offset: Float!
+  limit: Float
+  offset: Float
 }
 
 type Mutation {
@@ -245,13 +249,13 @@ type Mutation {
   createComment(comment: createCommentInput!): StatusModel!
   updateComment(comment: updateCommentInput!): StatusModel!
   deleteComment(id: String!): StatusModel!
+  createType(input: createTypeInput!): StatusModel!
+  deleteType(id: String!): StatusModel!
+  updateType(input: updateTypeInput!): StatusModel!
   addPhotoToWall(createPhotoInput: CreatePhotoInput!): StatusModel!
   addPhotoWallList(createPhotoList: [CreatePhotoInput!]!): StatusModel!
   deletePhotoWall(id: String!): StatusModel!
   updatePhotoWall(updateInput: UpdatePhotoWallInput!): StatusModel!
-  createType(input: createTypeInput!): StatusModel!
-  deleteType(id: String!): StatusModel!
-  updateType(input: updateTypeInput!): StatusModel!
   createLiveShared(createLiveShared: CreateLiveSharedInput!): StatusModel!
   updateLiveShared(updateLiveShared: UpdateLiveSharedInput!): StatusModel!
   deleteLiveShared(id: String!): StatusModel!
@@ -343,6 +347,19 @@ input updateCommentInput {
   parentComment: String
 }
 
+input createTypeInput {
+  name: String!
+  rootType: String
+  parentType: String
+}
+
+input updateTypeInput {
+  id: String!
+  name: String
+  rootType: String
+  parentType: String
+}
+
 input CreatePhotoInput {
   file: Upload!
   name: String!
@@ -360,19 +377,6 @@ input UpdatePhotoWallInput {
   author: String
   tags: [String!]
   type: String
-}
-
-input createTypeInput {
-  name: String!
-  rootType: String
-  parentType: String
-}
-
-input updateTypeInput {
-  id: String!
-  name: String
-  rootType: String
-  parentType: String
 }
 
 input CreateLiveSharedInput {

@@ -44,7 +44,7 @@ export class TagsResolver {
       type: () => Int,
       nullable: true,
     })
-    type?,
+    type?
   ) {
     let [nodes, totalCount] = await this.tagsService.list(
       paginationQuery,
@@ -96,6 +96,7 @@ export class TagsResolver {
   @ResolveField()
   async articles(@Parent() tag: Tags) {
     const { id } = tag;
-    return this.articleService.ArticleByTagId(id);
+    let [nodes] =  await this.articleService.articleByTagId(id);
+    return nodes
   }
 }

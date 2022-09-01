@@ -2,12 +2,14 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Comment } from 'src/comment/entity/comment.entity';
 import { Group } from 'src/group/entity/group.entity';
 import { Tags } from 'src/tags/entity/tags.entity';
+import { Type } from 'src/type/entity/type.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -32,8 +34,8 @@ export class Article {
   viewNum: number;
 
   @Column({ nullable: true })
-  @Field({ nullable: true})
-  pic: string
+  @Field({ nullable: true })
+  pic: string;
 
   @Column({
     type: 'text',
@@ -106,4 +108,11 @@ export class Article {
   @OneToMany(() => Comment, (comment) => comment.article, { cascade: true })
   @Field(() => [Comment])
   comments: Comment[];
+
+  @ManyToOne(() => Type, (type) => type.articles, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  @Field(() => Type, { nullable: true })
+  type: Type;
 }

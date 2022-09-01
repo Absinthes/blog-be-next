@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeService } from './type.service';
 import { TypeResolver } from './type.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Type } from './entity/type.entity';
+import { ArticleModule } from 'src/article/article.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Type])],
+  imports: [TypeOrmModule.forFeature([Type]), forwardRef(() => ArticleModule)],
   providers: [TypeService, TypeResolver],
-  exports:[TypeService]
+  exports: [TypeService],
 })
 export class TypeModule {}
