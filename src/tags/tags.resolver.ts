@@ -27,8 +27,13 @@ export class TagsResolver {
 
   @Query(() => [Tags])
   // @UseGuards(GraphQLAuthGuard)
-  public async getAllTag(@Args('type') type?: number) {
+  public async getAllTagByType(@Args('type') type?: number) {
     return await this.tagsService.allByType(type as TagsType);
+  }
+
+  @Query(() => [Tags])
+  public async getAllTag(){
+    return await this.tagsService.all()
   }
 
   // @UseGuards(GraphQLAuthGuard)

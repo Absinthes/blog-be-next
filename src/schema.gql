@@ -203,7 +203,8 @@ type Query {
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
   getArticleList(limit: Int!, offset: Int!): ArticleAllModel!
   getArticleById(id: String!): Article!
-  getAllTag(type: Float!): [Tags!]!
+  getAllTagByType(type: Float!): [Tags!]!
+  getAllTag: [Tags!]!
   getTagsList(paginationQuery: PaginationQuerInput!, type: Int): PaginatedTags!
   getTagByVagueName(name: String!): [Tags!]!
   getGroupList(input: PaginationQuerInput!): PaginatedGroup!

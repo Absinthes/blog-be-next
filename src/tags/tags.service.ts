@@ -21,6 +21,10 @@ export class TagsService {
     });
   }
 
+  public async all(){
+    return this.tagsRepository.find();
+  }
+
   public async list(paginationQuery: PaginationQuerInput, type?: number) {
     const { limit, offset } = paginationQuery;
     return this.tagsRepository.findAndCount({
