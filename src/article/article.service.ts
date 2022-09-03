@@ -39,7 +39,9 @@ export class ArticleService {
   public async insert(insertInput: ArticleInsertInput) {
     let tags, groups, filePath: FilePathType;
     insertInput.file &&
-      (filePath = await this.fileUploadService.fileUpload(insertInput.file));
+      (filePath = await this.fileUploadService.fileUpload(
+        await insertInput.file,
+      ));
     insertInput.tags &&
       (tags = await this.tagsService.findOrInsertTags(1, insertInput.tags));
     insertInput.groups &&
@@ -89,13 +91,63 @@ export class ArticleService {
     });
   }
 
-  public async ArticleByTagId(id: string) {
-    return this.articleRepository.find({
+  public async articleByTagId(id: string, pagination?: PaginationQuerInput) {
+    const params = {};
+    if (pagination) {
+      Object.assign(params, {
+        skip: pagination?.offset,
+        take: pagination?.limit,
+      });
+    }
+    return this.articleRepository.findAndCount({
+      ...params,
       where: {
         tags: {
           id,
         },
       },
+    });
+  }
+
+  public async articleByTypeId(
+    id: string,
+    isRoot: boolean = false,
+    pagination?: PaginationQuerInput,
+  ) {
+    const params = {};
+    if (pagination) {
+      Object.assign(params, {
+        skip: pagination?.offset,
+        take: pagination?.limit,
+      });
+    }
+    if (!isRoot) {
+      return this.articleRepository.findAndCount({
+        ...params,
+        where: {
+          type: {
+            id,
+          },
+        },
+      });
+    }
+
+    return this.articleRepository.findAndCount({
+      ...params,
+      where: [
+        {
+          type: {
+            id,
+          },
+        },
+        {
+          type: {
+            rootType: {
+              id,
+            },
+          },
+        },
+      ],
     });
   }
 }

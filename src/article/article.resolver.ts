@@ -20,6 +20,8 @@ import { ArticleUpdateInput } from './dto/article.update.input';
 import { GroupService } from 'src/group/group.service';
 import { PaginatedArticle } from './model/PaginatedArticle.model';
 import { CommentService } from 'src/comment/comment.service';
+import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
+import { TypeService } from 'src/type/type.service';
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -28,23 +30,65 @@ export class ArticleResolver {
     private readonly tagsService: TagsService,
     private readonly groupService: GroupService,
     private readonly commentService: CommentService,
+    private readonly typeService: TypeService,
   ) {}
 
   // @UseGuards(GraphQLAuthGuard)
   @Query(() => ArticleAllModel)
   public async getArticleList(
-    @Args({ name: 'limit', type: () => Int }) limit: number,
-    @Args({ name: 'offset', type: () => Int }) offset: number,
+    @Args({ name: 'limit', type: () => Int, nullable: true }) limit?: number,
+    @Args({ name: 'offset', type: () => Int, nullable: true }) offset?: number,
   ) {
     const [nodes, totalCount] = await this.articleService.list(offset, limit);
     const res = new PaginatedArticle(nodes, totalCount);
-    return res
+    return res;
   }
 
   @Query(() => Article)
   // @UseGuards(GraphQLAuthGuard)
   public async getArticleById(@Args('id') id: string) {
     return this.articleService.Artilce(id);
+  }
+
+  @Query(() => ArticleAllModel)
+  public async getArticleByTagId(
+    @Args('id') id: string,
+    @Args({
+      name: 'pagination',
+      type: () => PaginationQuerInput,
+      nullable: true,
+    })
+    pagination?,
+  ) {
+    const [nodes, totalCount] = await this.articleService.articleByTagId(
+      id,
+      pagination,
+    );
+    console.log(id, nodes, totalCount, pagination);
+    return new PaginatedArticle(nodes, totalCount);
+  }
+
+  @Query(() => ArticleAllModel)
+  public async getArticleByTypeId(
+    @Args('id') id: string,
+    @Args({
+      name: 'isRoot',
+      nullable: true,
+    })
+    isRoot: boolean,
+    @Args({
+      name: 'pagination',
+      type: () => PaginationQuerInput,
+      nullable: true,
+    })
+    pagination?,
+  ) {
+    const [nodes, totalCount] = await this.articleService.articleByTypeId(
+      id,
+      isRoot,
+      pagination,
+    );
+    return new PaginatedArticle(nodes, totalCount);
   }
 
   @Mutation(() => StatusModel)
@@ -57,7 +101,7 @@ export class ArticleResolver {
     articleInsertInput,
   ) {
     await this.articleService.insert(articleInsertInput);
-    return new StatusModel(200, '创建成功')
+    return new StatusModel(200, '创建成功');
   }
 
   @Mutation(() => StatusModel)
@@ -77,7 +121,7 @@ export class ArticleResolver {
     input,
   ) {
     await this.articleService.update(input);
-    return new StatusModel(200, '更新成功')
+    return new StatusModel(200, '更新成功');
   }
 
   @ResolveField()
@@ -97,5 +141,11 @@ export class ArticleResolver {
     const { id } = article;
     let [comments] = await this.commentService.getCommentByArticleId(id);
     return comments;
+  }
+
+  @ResolveField()
+  async type(@Parent() article: Article) {
+    const { id } = article;
+    return await this.typeService.getTypeByArticleId(id);
   }
 }

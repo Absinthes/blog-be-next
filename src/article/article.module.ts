@@ -10,6 +10,7 @@ import { FileUploadModule } from 'src/shared/file-upload/file-upload.module';
 import { Tags } from 'src/tags/entity/tags.entity';
 import { TagsModule } from 'src/tags/tags.module';
 import { TagsService } from 'src/tags/tags.service';
+import { TypeModule } from 'src/type/type.module';
 import { ArticleResolver } from './article.resolver';
 import { ArticleService } from './article.service';
 import { Article } from './entity/article.entity';
@@ -21,6 +22,7 @@ import { Article } from './entity/article.entity';
     forwardRef(() => TagsModule),
     forwardRef(() => GroupModule),
     forwardRef(() => CommentModule),
+    forwardRef(() => TypeModule)
   ],
   providers: [
     ArticleService,
