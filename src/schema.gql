@@ -95,9 +95,15 @@ type PhotoWall {
   type: Type
 }
 
+type TagType {
+  id: ID!
+  name: String!
+  Tags: [Tags!]!
+}
+
 type Tags {
   id: ID!
-  type: Int!
+  type: TagType!
   name: String!
   nameEn: String
   weight: Float!
@@ -193,10 +199,23 @@ type FriendsChain {
   name: String!
   link: String!
   imgSrc: String!
+  Introduction: String!
+  type: FriendsChainType!
+}
+
+type FriendsChainType {
+  id: ID!
+  name: String!
+  friendsChains: [FriendsChain!]!
 }
 
 type PaginatedFriendsChain {
   nodes: [FriendsChain!]
+  totalCount: Int!
+}
+
+type PaginatedFriendTypesChain {
+  nodes: [FriendsChainType!]
   totalCount: Int!
 }
 
@@ -205,15 +224,11 @@ type Query {
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
   getArticleList(limit: Int, offset: Int): ArticleAllModel!
   getArticleById(id: String!): Article!
-<<<<<<< HEAD
-  getAllTagByType(type: Float!): [Tags!]!
-  getAllTag: [Tags!]!
-=======
   getArticleByTagId(id: String!, pagination: PaginationQuerInput): ArticleAllModel!
   getArticleByTypeId(id: String!, isRoot: Boolean, pagination: PaginationQuerInput): ArticleAllModel!
-  getAllTag(type: Float!): [Tags!]!
->>>>>>> d97673f688f8b944d2f449ccf45cc0dcfd2689d1
-  getTagsList(paginationQuery: PaginationQuerInput!, type: Int): PaginatedTags!
+  getAllTagByType(type: String!): [Tags!]!
+  getAllTag: [Tags!]!
+  getTagsList(paginationQuery: PaginationQuerInput!, type: String): PaginatedTags!
   getTagByVagueName(name: String!): [Tags!]!
   getGroupList(input: PaginationQuerInput!): PaginatedGroup!
   getCommentByArticleId(ariticleId: String!): CommnetAndCount!
@@ -227,6 +242,8 @@ type Query {
   getLiveSharedById(id: String!): LiveShared!
   getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
   getFriendsChainList(input: PaginationQuerInput!): PaginatedFriendsChain!
+  getAllFriendsChain: FriendsChain!
+  getChainTypeList(input: PaginationQuerInput!): PaginatedFriendTypesChain!
 }
 
 input LoginInput {
@@ -248,6 +265,8 @@ type Mutation {
   createTag(input: TagsCreateInput!): StatusModel!
   updateTag(input: TagsUpdateInput!): StatusModel!
   deleteTag(id: String!): StatusModel!
+  createTagType(name: String!): StatusModel!
+  deleteTagType(id: String!): StatusModel!
   createGroup(input: GroupCreateInput!): StatusModel!
   updateGroup(input: GroupUpdateInput!): StatusModel!
   deleteGroup(id: ID!): StatusModel!
@@ -266,6 +285,9 @@ type Mutation {
   deleteLiveShared(id: String!): StatusModel!
   createFriendsChain(input: CreateFriendsChainInput!): StatusModel!
   deleteFriendsChain(id: String!): StatusModel!
+  deleteChainType(id: String!): StatusModel!
+  createChainType(name: String!): StatusModel!
+  updateChainType(input: UpdateFriendsChainType!): StatusModel!
 }
 
 input CreateInput {
@@ -301,7 +323,7 @@ input ArticleUpdateInput {
 }
 
 input TagsCreateInput {
-  type: Int!
+  type: String!
   name: String!
   nameEn: String
   weight: Float
@@ -309,8 +331,8 @@ input TagsCreateInput {
 
 input TagsUpdateInput {
   id: ID!
-  type: Float!
-  name: String!
+  type: String
+  name: String
   nameEn: String
   weight: Float
 }
@@ -407,4 +429,10 @@ input CreateFriendsChainInput {
   img: Upload!
   name: String!
   link: String!
+  type: String!
+}
+
+input UpdateFriendsChainType {
+  id: String!
+  name: String
 }

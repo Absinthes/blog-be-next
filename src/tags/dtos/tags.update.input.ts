@@ -4,20 +4,8 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 export class TagsUpdateInput {
   @Field(() => ID)
   id: string
-
-  @Field()
-  type: number
-
-  @Field()
-  name: string
-
-  @Field({
-    nullable: true
-  })
+  type?: string
+  name?: string
   nameEn?: string
-
-  @Field({
-    nullable: true
-  })
   weight?: number
 }

@@ -1,37 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
+import { getForeign } from 'src/shared/utils';
 import { IsNull, Repository, Like } from 'typeorm';
 import { TagsCreateInput } from './dtos/tags.create.input';
 import { TagsUpdateInput } from './dtos/tags.update.input';
-import { Tags, TagsType } from './entity/tags.entity';
+import { TagType } from './entity/tag.type.entity';
+import { Tags } from './entity/tags.entity';
 
+enum types {
+  Article = 1,
+  PhotoWall,
+  LiveShare,
+  multimedia,
+}
+// 1.Article 2.PhotoWall 3.LiveShare 4.multimedia
 @Injectable()
 export class TagsService {
   constructor(
     @InjectRepository(Tags)
     private readonly tagsRepository: Repository<Tags>,
+    @InjectRepository(TagType)
+    private readonly tagTypeRepository: Repository<TagType>,
   ) {}
 
-  public async allByType(type: TagsType) {
+  public async allByType(id: string) {
     return this.tagsRepository.find({
       where: {
-        type,
+        type: {
+          id,
+        },
       },
     });
   }
 
-  public async all(){
+  public async all() {
     return this.tagsRepository.find();
   }
 
-  public async list(paginationQuery: PaginationQuerInput, type?: number) {
+  public async list(paginationQuery: PaginationQuerInput, typeId?: string) {
     const { limit, offset } = paginationQuery;
     return this.tagsRepository.findAndCount({
       skip: offset,
       take: limit,
       where: {
-        type,
+        type: {
+          id: typeId,
+        },
       },
     });
   }
@@ -44,12 +59,14 @@ export class TagsService {
   }
 
   public async create(input: TagsCreateInput) {
-    let tagResult = this.tagsRepository.create(input);
+    const data = await getForeign(input, ['type'], [this.oneType.bind(this)]);
+    let tagResult = this.tagsRepository.create(data);
     return this.tagsRepository.save(tagResult);
   }
 
   public async update(input: TagsUpdateInput) {
-    return this.tagsRepository.update(input.id, input);
+    const data = await getForeign(input, ['type'], [this.oneType.bind(this)]);
+    return this.tagsRepository.update(input.id, data);
   }
 
   public async delete(id: string) {
@@ -109,9 +126,27 @@ export class TagsService {
    * @param tags
    * @returns
    */
-  public async findOrInsertTags(type: TagsType, tags: string[]) {
+  public async findOrInsertTags(TypeEnum: number, tags: string[]) {
+    console.log(TypeEnum)
     if (!Array.isArray(tags) || tags.length == 0) return [];
     let res: Tags[] = [];
+    let type;
+    switch (TypeEnum) {
+      case types.Article:
+        type = await this.findOrInsertTagType("Article")
+        break;
+      case types.LiveShare:
+        type = await this.findOrInsertTagType("LiveShare")
+        break;
+      case types.PhotoWall:
+        type = await this.findOrInsertTagType("PhotoWall")
+        break;
+      case types.multimedia:
+        type = await this.findOrInsertTagType("multimedia")
+        break;
+      default:
+        break
+    }
     for (let i = 0; i < tags.length; i++) {
       res.push(
         await this.findOrInsertTag({
@@ -128,5 +163,44 @@ export class TagsService {
     if (prev) return prev;
     const tagResult = this.tagsRepository.create(tag);
     return this.tagsRepository.save(tagResult);
+  }
+
+  public async oneType(id: string) {
+    return this.tagTypeRepository.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
+  public async findOrInsertTagType(name: string) {
+    let type = await this.oneTypeByName(name);
+    if (type) return type;
+    return this.createTagType(name);
+  }
+
+  public async oneTypeByName(name: string) {
+    return this.tagTypeRepository.findOne({
+      where: {
+        name,
+      },
+    });
+  }
+
+  public async createTagType(name: string) {
+    const type = this.tagTypeRepository.create({
+      name,
+    });
+    return this.tagTypeRepository.save(type);
+  }
+
+  public async deleteTagType(id:string){
+    return this.tagTypeRepository.delete(id)
+  }
+
+  public async updateTagType(id:string,name:string){
+    return this.tagTypeRepository.update(id,{
+      name
+    })
   }
 }

@@ -8,10 +8,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { TagType } from './tag.type.entity';
 
-export type TagsType = 1 | 2 | 3 | 4
+// export type TagsType = 1 | 2 | 3 | 4
 
 @Entity()
 @ObjectType()
@@ -20,12 +22,12 @@ export class Tags {
   @Field(() => ID)
   id?: string;
 
-  @Column({
-    comment: '1.Article 2.PhotoWall 3.LiveShare 4.multimedia',
-    type: 'int'
+  @ManyToOne(() => TagType,(tagType) => tagType.Tags,{
+    nullable:true,
+    onDelete:"CASCADE"
   })
-  @Field(() => Int)
-  type: number;
+  @Field(() => TagType)
+  type: TagType;
 
   @Column()
   @Field()

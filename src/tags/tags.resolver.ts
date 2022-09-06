@@ -14,7 +14,7 @@ import { GraphQLAuthGuard } from 'src/shared/guard/graphql.auth.guard';
 import { StatusModel } from 'src/shared/model/status.modle';
 import { TagsCreateInput } from './dtos/tags.create.input';
 import { TagsUpdateInput } from './dtos/tags.update.input';
-import { Tags, TagsType } from './entity/tags.entity';
+import { Tags } from './entity/tags.entity';
 import { PaginatedTags } from './model/PaginatedTags.model';
 import { TagsService } from './tags.service';
 
@@ -27,8 +27,8 @@ export class TagsResolver {
 
   @Query(() => [Tags])
   // @UseGuards(GraphQLAuthGuard)
-  public async getAllTagByType(@Args('type') type?: number) {
-    return await this.tagsService.allByType(type as TagsType);
+  public async getAllTagByType(@Args('type') typeId?: string) {
+    return await this.tagsService.allByType(typeId);
   }
 
   @Query(() => [Tags])
@@ -46,7 +46,7 @@ export class TagsResolver {
     paginationQuery,
     @Args({
       name: 'type',
-      type: () => Int,
+      type: () => String,
       nullable: true,
     })
     type?
@@ -103,5 +103,17 @@ export class TagsResolver {
     const { id } = tag;
     let [nodes] =  await this.articleService.articleByTagId(id);
     return nodes
+  }
+
+  @Mutation(() => StatusModel)
+  async createTagType(@Args({name:"name",type:() => String}) name){
+    await this.tagsService.createTagType(name)
+    return new StatusModel(200,"创建成功")
+  }
+
+  @Mutation(() => StatusModel)
+  async deleteTagType(@Args({name:"id",type:() => String}) id){
+    await this.tagsService.deleteTagType(id)
+    return new StatusModel(200,"删除成功")
   }
 }

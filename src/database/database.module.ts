@@ -9,7 +9,7 @@ import { ConfigService } from 'src/config/config.service';
         ...configService.getMySQLDataKey(),
         autoLoadEntities: true,
         synchronize: true,
-        logging: ['query'],
+        // logging: ['query'],
       }),
       inject: [ConfigService],
     }),

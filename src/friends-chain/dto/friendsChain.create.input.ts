@@ -7,4 +7,5 @@ export class CreateFriendsChainInput{
   @Field(() => GraphQLUpload)
   img:FileUpload
   link:string
+  type:string
 }
