@@ -48,16 +48,17 @@ export class TagsService {
     return this.tagsRepository.find();
   }
 
-  public async list(paginationQuery: PaginationQuerInput, typeId?: string) {
+  public async list(paginationQuery: PaginationQuerInput, typeEnum?: number) {
     const { limit, offset } = paginationQuery;
+    let where = typeEnum ? {} : {
+      type:{
+        name:types[typeEnum]
+      }
+    } 
     return this.tagsRepository.findAndCount({
       skip: offset,
       take: limit,
-      where: {
-        type: {
-          id: typeId,
-        },
-      },
+      where
     });
   }
 
@@ -75,8 +76,11 @@ export class TagsService {
   }
 
   public async update(input: TagsUpdateInput) {
-    const data = await getForeign(input, ['type'], [this.oneType.bind(this)]);
-    return this.tagsRepository.update(input.id, data);
+    let type = await this.getTagTypeByTagName(input.type)
+    return this.tagsRepository.update(input.id, {
+      ...input,
+      type
+    });
   }
 
   public async delete(id: string) {
@@ -137,7 +141,6 @@ export class TagsService {
    * @returns
    */
   public async findOrInsertTags(TypeEnum: number, tags: string[]) {
-    console.log(TypeEnum)
     if (!Array.isArray(tags) || tags.length == 0) return [];
     let res: Tags[] = [];
     let type;
@@ -211,6 +214,24 @@ export class TagsService {
   public async updateTagType(id:string,name:string){
     return this.tagTypeRepository.update(id,{
       name
+    })
+  }
+
+  public async getTagTypeByTagId(id:string){
+     return  this.tagTypeRepository.findOne({
+      where:{
+        Tags:{
+          id
+        }
+      }
+    })
+  }
+
+  public async getTagTypeByTagName(name:string){
+    return this.tagTypeRepository.findOne({
+      where:{
+        name
+      }
     })
   }
 }

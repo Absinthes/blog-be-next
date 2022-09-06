@@ -26,7 +26,7 @@ export class Tags {
     nullable:true,
     onDelete:"CASCADE"
   })
-  @Field(() => TagType)
+  @Field(() => TagType,{nullable:true})
   type: TagType;
 
   @Column()
