@@ -24,7 +24,7 @@ export class TagsService {
     private readonly tagTypeRepository: Repository<TagType>,
   ) {}
 
-  public async allByType(id: string) {
+  public async allByTypeId(id: string) {
     return this.tagsRepository.find({
       where: {
         type: {
@@ -32,6 +32,16 @@ export class TagsService {
         },
       },
     });
+  }
+
+  public async allByTypeName(name: string){
+    return this.tagsRepository.find({
+      where: {
+        type: {
+          name
+        }
+      }
+    })
   }
 
   public async all() {

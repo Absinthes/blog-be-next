@@ -1,8 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
+import { FileUploadService } from 'src/shared/file-upload/file-upload.service';
+import { FilePath } from 'src/shared/file-upload/model/filePath.model';
 import { Repository } from 'typeorm';
 import { GroupCreateInput } from './dtos/group.create.input';
+import { GroupUpdateInput } from './dtos/group.update.input';
 import { Group } from './entity/group.entity';
 
 @Injectable()
@@ -10,14 +13,15 @@ export class GroupService {
   constructor(
     @InjectRepository(Group)
     private readonly groupRepository: Repository<Group>,
+    private readonly fileUploadService: FileUploadService,
   ) {}
 
-  public async group(id: number){
+  public async group(id: number) {
     return await this.groupRepository.findOne({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 
   public async groupByName(name: string) {
@@ -29,27 +33,47 @@ export class GroupService {
   }
 
   public async list(input: PaginationQuerInput) {
-    const { limit, offset } = input
+    const { limit, offset } = input;
     return this.groupRepository.findAndCount({
       skip: offset,
-      take: limit
-    })
+      take: limit,
+    });
   }
 
   public async create(group: GroupCreateInput) {
-    const prev = await this.groupByName(group.name)
-    if(prev) throw new BadRequestException('group已存在')
-    const result = this.groupRepository.create(group)
-    return this.groupRepository.save(result)
+    const prev = await this.groupByName(group.name);
+    if (prev) throw new BadRequestException('group已存在');
+    let filePath: FilePath;
+    group.file &&
+      (filePath = await this.fileUploadService.fileUpload(
+        await group.file,
+        '/Group',
+      ));
+    const result = this.groupRepository.create({
+      ...group,
+      pic: filePath.path,
+    });
+    return this.groupRepository.save(result);
   }
 
-  public async update(group: Group) {
-    return this.groupRepository.update(group.id, group)
+  public async update(group: GroupUpdateInput) {
+    let filePath: FilePath;
+    group.file &&
+      (filePath = await this.fileUploadService.fileUpload(
+        await group.file,
+        '/Group',
+      ));
+    console.log(filePath)
+    delete group.file;
+    return this.groupRepository.update(group.id, {
+      ...group,
+      pic: filePath.path,
+    });
   }
 
   public async delete(id: number) {
-    const group =  await this.group(id)
-    return this.groupRepository.remove(group)
+    const group = await this.group(id);
+    return this.groupRepository.remove(group);
   }
 
   public async articleGroup(articleId: string) {
@@ -77,7 +101,7 @@ export class GroupService {
   public async findOrInsertGroup(group: GroupCreateInput) {
     const prev = await this.groupByName(group.name);
     if (prev) return prev;
-    let res = this.groupRepository.create(group)
-    return this.groupRepository.save(res)
+    let res = this.groupRepository.create(group);
+    return this.groupRepository.save(res);
   }
 }

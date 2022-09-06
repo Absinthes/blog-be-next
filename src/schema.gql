@@ -137,6 +137,9 @@ type Group {
   id: ID!
   name: String!
   nameEn: String
+  describe: String
+  pic: String
+  weight: Float
   createTime: String!
   articles: [Article!]!
 }
@@ -144,11 +147,6 @@ type Group {
 type CommnetAndCount {
   nodes: [Comment!]
   totalCount: Int!
-}
-
-type PaginatedGroup {
-  totalCount: Float!
-  nodes: [Group!]!
 }
 
 type FilePath {
@@ -160,6 +158,11 @@ type FileSuccessModel {
   code: Int!
   msg: String!
   nodes: FilePath
+}
+
+type PaginatedGroup {
+  totalCount: Float!
+  nodes: [Group!]!
 }
 
 type PaginatedTags {
@@ -226,7 +229,8 @@ type Query {
   getArticleById(id: String!): Article!
   getArticleByTagId(id: String!, pagination: PaginationQuerInput): ArticleAllModel!
   getArticleByTypeId(id: String!, isRoot: Boolean, pagination: PaginationQuerInput): ArticleAllModel!
-  getAllTagByType(type: String!): [Tags!]!
+  getAllTagByTypeId(type: String!): [Tags!]!
+  getAllTagByTypeName(name: String!): [Tags!]!
   getAllTag: [Tags!]!
   getTagsList(paginationQuery: PaginationQuerInput!, type: Int): PaginatedTags!
   getTagByVagueName(name: String!): [Tags!]!
@@ -338,14 +342,18 @@ input TagsUpdateInput {
 }
 
 input GroupCreateInput {
+  file: Upload
   name: String!
   nameEn: String
+  describe: String
 }
 
 input GroupUpdateInput {
   id: ID!
-  name: String!
+  file: Upload
+  name: String
   nameEn: String
+  describe: String
 }
 
 input createCommentInput {

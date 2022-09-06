@@ -1,12 +1,11 @@
 import { Field, InputType } from "@nestjs/graphql";
+import { GraphQLUpload, FileUpload } from "graphql-upload";
 
 @InputType()
 export class GroupCreateInput {
-  @Field()
   name: string
-
-  @Field({
-    nullable: true
-  })
   nameEn?: string
+  describe?: string
+  @Field(() => GraphQLUpload)
+  file?: FileUpload;
 }
