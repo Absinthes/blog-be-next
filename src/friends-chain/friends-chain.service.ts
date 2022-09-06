@@ -12,66 +12,79 @@ import { FriendsChain } from './entity/friends-chain.entity';
 export class FriendsChainService {
   constructor(
     @InjectRepository(FriendsChain)
-    private readonly friendsChainReposiotry:Repository<FriendsChain>,
+    private readonly friendsChainReposiotry: Repository<FriendsChain>,
     @InjectRepository(FriendsChainType)
-    private readonly typeReposiotry:Repository<FriendsChainType>,
-    private readonly fileUploadService:FileUploadService
-  ){}
+    private readonly typeReposiotry: Repository<FriendsChainType>,
+    private readonly fileUploadService: FileUploadService,
+  ) {}
 
-  public async list(offset:number,limit:number){
+  public async list(offset: number, limit: number) {
     return this.friendsChainReposiotry.findAndCount({
-      skip:offset,
-      take:limit
-    })
+      skip: offset,
+      take: limit,
+    });
   }
 
-  public async create(input:CreateFriendsChainInput){
-    let {path} = await this.fileUploadService.fileUpload(await input.img,"/friendChain")
-    const data = await getForeign(input,['type'],[this.oneType.bind(this)])
+  public async create(input: CreateFriendsChainInput) {
+    let { path } = await this.fileUploadService.fileUpload(
+      await input.img,
+      '/friendChain',
+    );
+    const data = await getForeign(input, ['type'], [this.oneType.bind(this)]);
     const result = this.friendsChainReposiotry.create({
       ...data,
-      imgSrc:path
-    })
-    return await this.friendsChainReposiotry.save(result)
+      imgSrc: path,
+    });
+    return  this.friendsChainReposiotry.save(result);
   }
 
-  public async delete(id:string){
-    return await this.friendsChainReposiotry.delete(id)
+  public async delete(id: string) {
+    return  this.friendsChainReposiotry.delete(id);
   }
 
-  public async all(){
-    return await this.friendsChainReposiotry.find()
+  public async all() {
+    return  this.friendsChainReposiotry.find();
   }
 
-  public async listType(offset:number,limit:number){
+  public async listType(offset: number, limit: number) {
     return this.typeReposiotry.findAndCount({
-      skip:offset,
-      take:limit
-    })
+      skip: offset,
+      take: limit,
+    });
   }
 
-  public async oneType(id:string){
-    return await this.typeReposiotry.findOne({
-      where:{
-        id
-      }
-    })
+  public async oneType(id: string) {
+    return  this.typeReposiotry.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
-  public async createType(name:string){
+  public async createType(name: string) {
     const res = this.typeReposiotry.create({
-      name
-    })
-    return await this.typeReposiotry.save(res)
+      name,
+    });
+    return  this.typeReposiotry.save(res);
   }
 
-  public async deleteType(id:string){
-    return await this.typeReposiotry.delete(id)
+  public async deleteType(id: string) {
+    return  this.typeReposiotry.delete(id);
   }
 
-  public async updateType({id,name}:UpdateFriendsChainType){
-    return await this.typeReposiotry.update(id,{
-      name
+  public async updateType({ id, name }: UpdateFriendsChainType) {
+    return  this.typeReposiotry.update(id, {
+      name,
+    });
+  }
+
+  public async getTypeByFriendId(id:string){
+    return  this.typeReposiotry.findOne({
+      where:{
+        friendsChains:{
+          id
+        }
+      }
     })
   }
 }

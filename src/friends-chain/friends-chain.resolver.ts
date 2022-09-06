@@ -1,4 +1,4 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, ResolveField, Parent } from '@nestjs/graphql';
 import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
 import { StatusModel } from 'src/shared/model/status.modle';
 import { UpdateFriendsChainType } from './dto/friendChain.type.update.input';
@@ -8,7 +8,7 @@ import { FriendsChainService } from './friends-chain.service';
 import { PaginatedFriendsChain } from './model/PaginatedFriendsChain.model';
 import { PaginatedFriendTypesChain } from './model/PaginatedFriendsChainType.model';
 
-@Resolver()
+@Resolver(() => FriendsChain)
 export class FriendsChainResolver {
   constructor(
     private readonly friendsChainService: FriendsChainService,
@@ -65,5 +65,10 @@ export class FriendsChainResolver {
   public async updateChainType(@Args({name:"input",type:() => UpdateFriendsChainType}) input){
     await this.friendsChainService.updateType(input)
     return new StatusModel(200,"修改成功")
+  }
+
+  @ResolveField()
+  public async type(@Parent() friednChain:FriendsChain){
+    return await this.friendsChainService.getTypeByFriendId(friednChain.id)
   }
 }

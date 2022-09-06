@@ -6,11 +6,11 @@ import { Tags } from './tags.entity';
 @ObjectType()
 export class TagType {
   @PrimaryGeneratedColumn()
-  @Field(() => ID)
+  @Field(() => ID,{nullable:true})
   id: string;
 
   @Column()
-  @Field(() => String)
+  @Field(() => String,{nullable:true})
   name: string;
 
   @OneToMany(() => Tags, (tags) => tags.type, {

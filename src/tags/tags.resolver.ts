@@ -46,7 +46,7 @@ export class TagsResolver {
     paginationQuery,
     @Args({
       name: 'type',
-      type: () => String,
+      type: () => Int,
       nullable: true,
     })
     type?
@@ -87,7 +87,8 @@ export class TagsResolver {
     })
     input,
   ) {
-    await this.tagsService.update(input);
+    console.log(input)
+    // await this.tagsService.update(input);
     return new StatusModel(200, '更新成功');
   }
 
@@ -115,5 +116,11 @@ export class TagsResolver {
   async deleteTagType(@Args({name:"id",type:() => String}) id){
     await this.tagsService.deleteTagType(id)
     return new StatusModel(200,"删除成功")
+  }
+
+  @ResolveField()
+  async type(@Parent() tag:Tags){
+    let res =  await this.tagsService.getTagTypeByTagId(tag.id)
+    return res
   }
 }

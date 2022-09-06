@@ -96,14 +96,14 @@ type PhotoWall {
 }
 
 type TagType {
-  id: ID!
-  name: String!
+  id: ID
+  name: String
   Tags: [Tags!]!
 }
 
 type Tags {
   id: ID!
-  type: TagType!
+  type: TagType
   name: String!
   nameEn: String
   weight: Float!
@@ -228,7 +228,7 @@ type Query {
   getArticleByTypeId(id: String!, isRoot: Boolean, pagination: PaginationQuerInput): ArticleAllModel!
   getAllTagByType(type: String!): [Tags!]!
   getAllTag: [Tags!]!
-  getTagsList(paginationQuery: PaginationQuerInput!, type: String): PaginatedTags!
+  getTagsList(paginationQuery: PaginationQuerInput!, type: Int): PaginatedTags!
   getTagByVagueName(name: String!): [Tags!]!
   getGroupList(input: PaginationQuerInput!): PaginatedGroup!
   getCommentByArticleId(ariticleId: String!): CommnetAndCount!
