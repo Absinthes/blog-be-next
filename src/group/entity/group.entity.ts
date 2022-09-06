@@ -24,8 +24,29 @@ export class Group {
   })
   nameEn?: string
 
+  @Column({
+    nullable: true,
+    comment: '描述信息'
+  })
+  @Field({ nullable: true })
+  describe: string;
+
+  @Column({
+    nullable: true,
+    comment: '封面图片'
+  })
+  @Field({ nullable: true })
+  pic: string
+
+  @Column({ 
+    type: 'int',
+    default: 0
+  })
+  @Field({ nullable: true })
+  weight: number
+
   @CreateDateColumn({
-    type: 'timestamp',
+    type: 'timestamp', 
     default: () => 'CURRENT_TIMESTAMP(6)',
     comment: '创建时间',
   })

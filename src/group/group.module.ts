@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleModule } from 'src/article/article.module';
 import { ArticleService } from 'src/article/article.service';
 import { Article } from 'src/article/entity/article.entity';
+import { FileUploadModule } from 'src/shared/file-upload/file-upload.module';
 import { Tags } from 'src/tags/entity/tags.entity';
 import { TagsModule } from 'src/tags/tags.module';
 import { TagsService } from 'src/tags/tags.service';
@@ -14,6 +15,7 @@ import { GroupService } from './group.service';
   imports: [
     TypeOrmModule.forFeature([Group]),
     forwardRef(() => ArticleModule),
+    FileUploadModule
   ],
   providers: [GroupService, GroupResolver],
   exports: [GroupService],
