@@ -21,6 +21,14 @@ export class Type {
   @Field(() => String, { nullable: true })
   name: string;
 
+  @Column()
+  @Field(() => String, { nullable: true })
+  nameEn: string;
+
+  @Column()
+  @Field(() => String, { nullable: true })
+  describe: string;
+
   @Field(() => String, { nullable: true })
   @CreateDateColumn({
     type: 'timestamp',

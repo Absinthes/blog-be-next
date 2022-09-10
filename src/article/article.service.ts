@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { ArticleInsertInput } from './dto/article.insert.input';
 import { ArticleUpdateInput } from './dto/article.update.input';
 import { Article } from './entity/article.entity';
+import { maxWeight } from 'src/global';
 
 @Injectable()
 export class ArticleService {
@@ -29,10 +30,31 @@ export class ArticleService {
     });
   }
 
+  public async sticky() {
+    return this.articleRepository.find({
+      where: {
+        weight: maxWeight,
+      },
+    });
+  }
+
+  public async unStickyList(offset: number, limit: number) {
+    return this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.weight < :maxWeight', { maxWeight: maxWeight })
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
+  }
+
   public async list(offset: number, limit: number) {
     return this.articleRepository.findAndCount({
       skip: offset,
       take: limit,
+      order: {
+        weight: 'DESC',
+        createTime: 'DESC',
+      },
     });
   }
 
@@ -87,6 +109,9 @@ export class ArticleService {
         groups: {
           id: groupId,
         },
+      },
+      order: {
+        createTime: 'ASC',
       },
     });
   }

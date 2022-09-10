@@ -91,6 +91,28 @@ export class ArticleResolver {
     return new PaginatedArticle(nodes, totalCount);
   }
 
+  @Query(() => ArticleAllModel)
+  public async getArticleSticky(
+    @Args({
+      name: 'input',
+      type: () => PaginationQuerInput,
+    })
+    input,
+  ) {
+    const { limit, offset } = input as PaginationQuerInput;
+    const stickyList = await this.articleService.sticky();
+    const [unStickList, totalCount] = await this.articleService.unStickyList(
+      offset,
+      limit,
+    );
+    return new PaginatedArticle(stickyList.concat(unStickList), totalCount);
+  }
+
+  @Query(() => [Article])
+  public async getArticleTop() {
+    return this.articleService.sticky()
+  }
+
   @Mutation(() => StatusModel)
   // @UseGuards(GraphQLAuthGuard)
   public async createArticle(

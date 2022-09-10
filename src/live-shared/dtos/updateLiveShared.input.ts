@@ -5,6 +5,7 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload';
 export class UpdateLiveSharedInput {
   @Field(() => ID)
   id: string;
+  title?: string;
   content?: string;
   address?: string;
   emotion?: string;

@@ -6,6 +6,8 @@ export class updateTypeInput {
   @IsNotEmpty()
   id:string
   name?:string
+  nameEn?: string
+  describe?: string
   rootType?:string
   parentType?:string
 }

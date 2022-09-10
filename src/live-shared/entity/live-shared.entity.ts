@@ -17,10 +17,15 @@ export class LiveShared {
   @Field(() => ID)
   id: string;
 
+  @Column()
+  @Field()
+  title: string
+
   @Column({
     type: 'text',
+    nullable: true
   })
-  @Field()
+  @Field({ nullable: true })
   content: string;
 
   @Column({ nullable: true,comment:"地址" })

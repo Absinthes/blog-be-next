@@ -48,8 +48,9 @@ export class TagsResolver {
     @Args({
       name: 'paginationQuery',
       type: () => PaginationQuerInput,
+      nullable: true
     })
-    paginationQuery,
+    paginationQuery?,
     @Args({
       name: 'type',
       type: () => Int,

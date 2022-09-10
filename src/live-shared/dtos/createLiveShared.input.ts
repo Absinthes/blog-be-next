@@ -4,7 +4,8 @@ import { Tags } from 'src/tags/entity/tags.entity';
 
 @InputType()
 export class CreateLiveSharedInput {
-  content: string;
+  title: string;
+  content?: string;
   address?: string;
   emotion?: string;
   @Field(() => GraphQLUpload)
