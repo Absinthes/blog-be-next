@@ -197,6 +197,12 @@ type PaginatedLiveShared {
   nodes: [LiveShared!]!
 }
 
+type FriendsChainType {
+  id: ID!
+  name: String!
+  friendsChains: [FriendsChain!]!
+}
+
 type FriendsChain {
   id: ID!
   name: String!
@@ -204,12 +210,6 @@ type FriendsChain {
   imgSrc: String!
   Introduction: String!
   type: FriendsChainType!
-}
-
-type FriendsChainType {
-  id: ID!
-  name: String!
-  friendsChains: [FriendsChain!]!
 }
 
 type PaginatedFriendsChain {
@@ -247,6 +247,7 @@ type Query {
   getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
   getFriendsChainList(input: PaginationQuerInput!): PaginatedFriendsChain!
   getAllFriendsChain: FriendsChain!
+  getAllType: [FriendsChainType!]!
   getChainTypeList(input: PaginationQuerInput!): PaginatedFriendTypesChain!
 }
 

@@ -70,13 +70,16 @@ export class TagsService {
   }
 
   public async create(input: TagsCreateInput) {
-    const data = await getForeign(input, ['type'], [this.oneType.bind(this)]);
-    let tagResult = this.tagsRepository.create(data);
+    let type = await this.findOrInsertTagType(input.type)
+    let tagResult = this.tagsRepository.create({
+      ...input,
+      type
+    });
     return this.tagsRepository.save(tagResult);
   }
 
   public async update(input: TagsUpdateInput) {
-    let type = await this.getTagTypeByTagName(input.type)
+    let type = await this.findOrInsertTagType(input.type)
     return this.tagsRepository.update(input.id, {
       ...input,
       type

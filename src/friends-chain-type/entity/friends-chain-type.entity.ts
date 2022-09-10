@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { FriendsChain } from './friends-chain.entity';
+import { FriendsChain } from '../../friends-chain/entity/friends-chain.entity';
 
 @Entity()
 @ObjectType()

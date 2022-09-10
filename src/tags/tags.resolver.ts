@@ -93,8 +93,7 @@ export class TagsResolver {
     })
     input,
   ) {
-    console.log(input)
-    // await this.tagsService.update(input);
+    await this.tagsService.update(input);
     return new StatusModel(200, '更新成功');
   }
 
