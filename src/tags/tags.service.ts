@@ -48,16 +48,15 @@ export class TagsService {
     return this.tagsRepository.find();
   }
 
-  public async list(paginationQuery: PaginationQuerInput, typeEnum?: number) {
-    const { limit, offset } = paginationQuery;
+  public async list(paginationQuery?: PaginationQuerInput, typeEnum?: number) {
     let where = typeEnum ? {} : {
       type:{
         name:types[typeEnum]
       }
     } 
     return this.tagsRepository.findAndCount({
-      skip: offset,
-      take: limit,
+      skip: paginationQuery?.offset,
+      take: paginationQuery?.limit,
       where
     });
   }

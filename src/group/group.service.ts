@@ -37,6 +37,9 @@ export class GroupService {
     return this.groupRepository.findAndCount({
       skip: offset,
       take: limit,
+      order: {
+        createTime: "DESC"
+      }
     });
   }
 
@@ -67,7 +70,7 @@ export class GroupService {
     delete group.file;
     return this.groupRepository.update(group.id, {
       ...group,
-      pic: filePath.path,
+      pic: filePath?.path,
     });
   }
 
@@ -83,6 +86,9 @@ export class GroupService {
           id: articleId,
         },
       },
+      order: {
+        createTime: "ASC"
+      }
     });
   }
 
@@ -103,5 +109,11 @@ export class GroupService {
     if (prev) return prev;
     let res = this.groupRepository.create(group);
     return this.groupRepository.save(res);
+  }
+
+  public async nameVague(name: string) {
+    return this.groupRepository.createQueryBuilder('group')
+      .where('group.name like :name', { name: `%${name}%` })
+      .getMany()
   }
 }

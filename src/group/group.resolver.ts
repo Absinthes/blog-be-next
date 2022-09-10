@@ -37,6 +37,24 @@ export class GroupResolver {
     return new PaginatedGroup(nodes, totalCount);
   }
 
+  @Query(() => Group)
+  public async getGroupById(
+    @Args({
+      name: 'id',
+      type: () => Int,
+    })
+    id,
+  ) {
+    return await this.groupService.group(id);
+  }
+
+  @Query(() => [Group])
+  public async getGroupByVagueName(
+    @Args({ name: 'name', type: () => String }) name,
+  ) {
+    return await this.groupService.nameVague(name);
+  }
+
   @Mutation(() => StatusModel)
   public async createGroup(
     @Args({
@@ -62,10 +80,13 @@ export class GroupResolver {
   }
 
   @Mutation(() => StatusModel)
-  public async deleteGroup(@Args({
-    name: 'id',
-    type: () => ID
-  }) id) {
+  public async deleteGroup(
+    @Args({
+      name: 'id',
+      type: () => ID,
+    })
+    id,
+  ) {
     await this.groupService.delete(id);
     return new StatusModel(200, '删除成功');
   }

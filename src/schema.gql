@@ -47,7 +47,8 @@ type Comment {
 
 type LiveShared {
   id: ID!
-  content: String!
+  title: String!
+  content: String
   address: String
   emotion: String
   illustration: String
@@ -75,6 +76,8 @@ type Multimedia {
 type Type {
   id: ID
   name: String
+  nameEn: String
+  describe: String
   createTime: String
   rootType: Type
   parentType: Type
@@ -229,12 +232,16 @@ type Query {
   getArticleById(id: String!): Article!
   getArticleByTagId(id: String!, pagination: PaginationQuerInput): ArticleAllModel!
   getArticleByTypeId(id: String!, isRoot: Boolean, pagination: PaginationQuerInput): ArticleAllModel!
+  getArticleSticky(input: PaginationQuerInput!): ArticleAllModel!
+  getArticleTop: [Article!]!
   getAllTagByTypeId(type: String!): [Tags!]!
   getAllTagByTypeName(name: String!): [Tags!]!
   getAllTag: [Tags!]!
-  getTagsList(paginationQuery: PaginationQuerInput!, type: Int): PaginatedTags!
+  getTagsList(paginationQuery: PaginationQuerInput, type: Int): PaginatedTags!
   getTagByVagueName(name: String!): [Tags!]!
   getGroupList(input: PaginationQuerInput!): PaginatedGroup!
+  getGroupById(id: Int!): Group!
+  getGroupByVagueName(name: String!): [Group!]!
   getCommentByArticleId(ariticleId: String!): CommnetAndCount!
   getCommentByID(id: String!): Comment!
   getCommnet(input: PaginationQuerInput!): CommnetAndCount!
@@ -385,6 +392,8 @@ input updateCommentInput {
 
 input createTypeInput {
   name: String!
+  nameEn: String!
+  describe: String
   rootType: String
   parentType: String
 }
@@ -392,6 +401,8 @@ input createTypeInput {
 input updateTypeInput {
   id: String!
   name: String
+  nameEn: String
+  describe: String
   rootType: String
   parentType: String
 }
@@ -418,7 +429,8 @@ input UpdatePhotoWallInput {
 input CreateLiveSharedInput {
   file: Upload
   weight: Float
-  content: String!
+  title: String!
+  content: String
   address: String
   emotion: String
   tags: [String!]
@@ -428,6 +440,7 @@ input UpdateLiveSharedInput {
   id: ID!
   file: Upload
   weight: Float
+  title: String
   content: String
   address: String
   emotion: String

@@ -102,8 +102,10 @@ export class TypeService {
       ["rootType","parentType"],
       [this.getTypeById.bind(this),this.getTypeById.bind(this)]
     )
+    console.log(rest)
     return await this.TypeRepository.update(id,{
-      ...rest
+      // ...input,
+      ...rest,
     })
   }
 }
