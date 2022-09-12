@@ -73,9 +73,14 @@ export class TypeService {
 
   public async getTypeByName(name:string){
     return await this.TypeRepository.findOne({
-      where:{
-        name
-      }
+      where: [
+        {
+          name
+        },
+        {
+          nameEn: name
+        }
+      ]
     })
   }
 
@@ -102,7 +107,6 @@ export class TypeService {
       ["rootType","parentType"],
       [this.getTypeById.bind(this),this.getTypeById.bind(this)]
     )
-    console.log(rest)
     return await this.TypeRepository.update(id,{
       // ...input,
       ...rest,

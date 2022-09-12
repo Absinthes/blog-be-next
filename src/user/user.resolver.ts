@@ -19,7 +19,6 @@ export class UserResovler {
     @Args({ name: 'phoneAndEmail', type: () => String }) phoneAndEmail: string,
     @CurrentUser() user: any,
   ) {
-    console.log(user);
     const isEmail = verifyEmail(phoneAndEmail);
     const isPhone = verifyPhone(phoneAndEmail);
     if (!isEmail && !isPhone) return new UserInputError('手机号或邮箱错误！');

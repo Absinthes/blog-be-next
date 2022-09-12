@@ -64,7 +64,6 @@ export class ArticleResolver {
       id,
       pagination,
     );
-    console.log(id, nodes, totalCount, pagination);
     return new PaginatedArticle(nodes, totalCount);
   }
 
@@ -92,6 +91,29 @@ export class ArticleResolver {
   }
 
   @Query(() => ArticleAllModel)
+  public async getArticleByTypeName(
+    @Args('name') name: string,
+    @Args({
+      name: 'isRoot',
+      nullable: true,
+    })
+    isRoot: boolean,
+    @Args({
+      name: 'pagination',
+      type: () => PaginationQuerInput,
+      nullable: true,
+    })
+    pagination?,
+  ) {
+    const [nodes, totalCount] = await this.articleService.articleByTypeName(
+      name,
+      isRoot,
+      pagination,
+    );
+    return new PaginatedArticle(nodes, totalCount);
+  }
+
+  @Query(() => ArticleAllModel)
   public async getArticleSticky(
     @Args({
       name: 'input',
@@ -110,7 +132,7 @@ export class ArticleResolver {
 
   @Query(() => [Article])
   public async getArticleTop() {
-    return this.articleService.sticky()
+    return this.articleService.sticky();
   }
 
   @Mutation(() => StatusModel)

@@ -18,14 +18,14 @@ export class Type {
   id: string;
 
   @Column()
-  @Field(() => String, { nullable: true })
+  @Field(() => String)
   name: string;
 
   @Column()
-  @Field(() => String, { nullable: true })
+  @Field(() => String)
   nameEn: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Field(() => String, { nullable: true })
   describe: string;
 
