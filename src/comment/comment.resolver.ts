@@ -25,9 +25,16 @@ export class CommentResolver {
   ) {}
 
   @Query(() => CommnetAndCount)
-  public async getCommentByArticleId(@Args('ariticleId') ariticleId: string) {
+  public async getCommentByArticleId(
+    @Args('ariticleId') ariticleId: string,
+    @Args({
+      name: 'pagination',
+      type: () => PaginationQuerInput,
+    })
+    pagination,
+  ) {
     //根据文章id获取评论
-    const res = await this.commentService.getCommentByArticleId(ariticleId);
+    const res = await this.commentService.getCommentByArticleId(ariticleId,pagination.offset,pagination.limit);
     return new CommnetAndCount(...res);
   }
 
@@ -42,7 +49,7 @@ export class CommentResolver {
     @Args({ name: 'comment', type: () => createCommentInput }) comment,
   ) {
     //创建评论
-    await this.commentService.createComment(comment);
+    const res = await this.commentService.createComment(comment);
     return new StatusModel(200, '创建成功');
   }
 
@@ -111,10 +118,13 @@ export class CommentResolver {
 
   @ResolveField()
   public async childComment(@Parent() comment: Comment) {
+    console.log(comment);
     if (comment.childComment) return comment.childComment;
-    return (
-      await this.commentService.getCommentById(comment.id, ['childComment'])
-    ).childComment;
+    let res = await this.commentService.getCommentById(comment.id, [
+      'childComment',
+    ]);
+    console.log(res);
+    return res.childComment;
   }
 
   @ResolveField()

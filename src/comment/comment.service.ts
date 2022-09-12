@@ -25,14 +25,20 @@ export class CommentService {
     private readonly articleService: ArticleService,
   ) {}
 
-  public async getCommentByArticleId(id: string) {
-    return this.commnetRepository.findAndCount({ 
-      where: {
-        article: {
-          id,
-        },
-      },
-    });
+  public async getCommentByArticleId(id: string,offset:number =  0,limit:number = 10) {
+    return await this.commnetRepository
+      .createQueryBuilder('comment')
+      .leftJoinAndSelect("comment.article","article")
+      // .leftJoinAndSelect("comment.childComment","childComment")
+      // .leftJoinAndSelect("childComment.article","childArticle")
+      // .leftJoinAndSelect("childComment.rootComment","childRootComment")
+      // .leftJoinAndSelect("childComment.parentComment","childParentComment")
+      .where('comment.rootComment IS NULL')
+      .andWhere("article.id = :id",{id})
+      .orderBy("comment.createTime","DESC")
+      .limit(limit)
+      .offset(offset)
+      .getManyAndCount();
   }
 
   public async getCommentById(id: string, relations: relationType[] = []) {
@@ -40,6 +46,7 @@ export class CommentService {
     relations.forEach((prop) => {
       re[prop] = true;
     });
+    console.log(re)
     return await this.commnetRepository.findOne({
       where: {
         id,
@@ -104,7 +111,7 @@ export class CommentService {
       ],
     );
     const newComment = this.commnetRepository.create(data);
-    await this.commnetRepository.save(newComment);
+    return await this.commnetRepository.save(newComment);
   }
 
   public async updateComment(data: updateCommentInput) {

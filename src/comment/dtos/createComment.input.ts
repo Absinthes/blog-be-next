@@ -24,6 +24,4 @@ export class createCommentInput{
   article?:string
   rootComment?:string
   parentComment?:string
-  childComment?:string
-
 }

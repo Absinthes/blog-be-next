@@ -97,7 +97,7 @@ export class Comment {
   parentComment: Comment;
 
   @Field(() => [Comment])
-  @OneToMany(() => Comment, (comment) => comment.parentComment, {
+  @OneToMany(() => Comment, (comment) => comment.rootComment, {
     cascade: true,
     nullable: true,
     // onDelete:"CASCADE"

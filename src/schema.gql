@@ -242,7 +242,7 @@ type Query {
   getGroupList(input: PaginationQuerInput!): PaginatedGroup!
   getGroupById(id: Int!): Group!
   getGroupByVagueName(name: String!): [Group!]!
-  getCommentByArticleId(ariticleId: String!): CommnetAndCount!
+  getCommentByArticleId(ariticleId: String!, pagination: PaginationQuerInput!): CommnetAndCount!
   getCommentByID(id: String!): Comment!
   getCommnet(input: PaginationQuerInput!): CommnetAndCount!
   getCommentByRoot(input: PaginationQuerInput!): CommnetAndCount!
@@ -374,7 +374,6 @@ input createCommentInput {
   article: String
   rootComment: String
   parentComment: String
-  childComment: String
 }
 
 input updateCommentInput {
