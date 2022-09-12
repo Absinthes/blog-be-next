@@ -175,4 +175,65 @@ export class ArticleService {
       ],
     });
   }
+
+  public async articleByTypeName(
+    name: string,
+    isRoot: boolean = false,
+    pagination?: PaginationQuerInput,
+  ) {
+    const params = {};
+    if (pagination) {
+      Object.assign(params, {
+        skip: pagination?.offset,
+        take: pagination?.limit,
+      });
+    }
+    if (!isRoot) {
+      return this.articleRepository.findAndCount({
+        ...params,
+        where: [
+          {
+            type: {
+              name,
+            },
+          },
+          {
+            type: {
+              nameEn: name,
+            },
+          },
+        ],
+      });
+    }
+
+    return this.articleRepository.findAndCount({
+      ...params,
+      where: [
+        {
+          type: {
+            name,
+          },
+        },
+        {
+          type: {
+            nameEn: name,
+          },
+        },
+        {
+          type: {
+            rootType: {
+              name,
+            },
+          },
+        },
+        {
+          type: {
+            rootType: {
+              nameEn: name,
+            },
+          },
+        },
+      ],
+    });
+  }
 }

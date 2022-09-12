@@ -66,7 +66,6 @@ export class GroupService {
         await group.file,
         '/Group',
       ));
-    console.log(filePath)
     delete group.file;
     return this.groupRepository.update(group.id, {
       ...group,

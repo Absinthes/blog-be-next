@@ -75,8 +75,8 @@ type Multimedia {
 
 type Type {
   id: ID
-  name: String
-  nameEn: String
+  name: String!
+  nameEn: String!
   describe: String
   createTime: String
   rootType: Type
@@ -232,6 +232,7 @@ type Query {
   getArticleById(id: String!): Article!
   getArticleByTagId(id: String!, pagination: PaginationQuerInput): ArticleAllModel!
   getArticleByTypeId(id: String!, isRoot: Boolean, pagination: PaginationQuerInput): ArticleAllModel!
+  getArticleByTypeName(name: String!, isRoot: Boolean, pagination: PaginationQuerInput): ArticleAllModel!
   getArticleSticky(input: PaginationQuerInput!): ArticleAllModel!
   getArticleTop: [Article!]!
   getAllTagByTypeId(type: String!): [Tags!]!
