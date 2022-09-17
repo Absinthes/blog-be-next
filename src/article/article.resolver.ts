@@ -135,6 +135,11 @@ export class ArticleResolver {
     return this.articleService.sticky();
   }
 
+  @Query(() => [Article])
+  public async getArticleByYear(@Args({name:"year",type:() => Int}) year){
+    return await this.articleService.articleByYear(year);
+  }
+
   @Mutation(() => StatusModel)
   // @UseGuards(GraphQLAuthGuard)
   public async createArticle(

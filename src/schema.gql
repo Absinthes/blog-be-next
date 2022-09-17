@@ -225,6 +225,23 @@ type PaginatedFriendTypesChain {
   totalCount: Int!
 }
 
+type StatisticsArticleByMonth {
+  year: Float!
+  data: [ArticleByMonth!]
+  length: Float
+}
+
+type ArticleByMonth {
+  month: Float
+  data: [Article!]
+}
+
+type StatisticsArticle {
+  year: Float!
+  data: [Article!]
+  length: Float
+}
+
 type Query {
   login(input: LoginInput!): Token!
   getUserByPhoneAndEmail(phoneAndEmail: String!): User!
@@ -235,6 +252,7 @@ type Query {
   getArticleByTypeName(name: String!, isRoot: Boolean, pagination: PaginationQuerInput): ArticleAllModel!
   getArticleSticky(input: PaginationQuerInput!): ArticleAllModel!
   getArticleTop: [Article!]!
+  getArticleByYear(year: Int!): [Article!]!
   getAllTagByTypeId(type: String!): [Tags!]!
   getAllTagByTypeName(name: String!): [Tags!]!
   getAllTag: [Tags!]!
@@ -257,6 +275,8 @@ type Query {
   getAllFriendsChain: FriendsChain!
   getAllType: [FriendsChainType!]!
   getChainTypeList(input: PaginationQuerInput!): PaginatedFriendTypesChain!
+  statisArticleByYear: [StatisticsArticle!]!
+  statisArticleByMonth: [StatisticsArticleByMonth!]!
 }
 
 input LoginInput {

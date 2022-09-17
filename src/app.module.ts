@@ -19,6 +19,7 @@ import { join } from 'path';
 import { TypeModule } from './type/type.module';
 import { FriendsChainModule } from './friends-chain/friends-chain.module';
 import { FriendsChainTypeModule } from './friends-chain-type/friends-chain-type.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { FriendsChainTypeModule } from './friends-chain-type/friends-chain-type.
     TypeModule,
     FriendsChainModule,
     FriendsChainTypeModule,
+    StatisticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
