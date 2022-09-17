@@ -4,9 +4,8 @@ import { GroupService } from 'src/group/group.service';
 import { PaginationQuerInput } from 'src/shared/dtos/paginationQuery.input';
 import { FileUploadService } from 'src/shared/file-upload/file-upload.service';
 import { FilePathType } from 'src/shared/file-upload/model/filePath.model';
-import { Tags } from 'src/tags/entity/tags.entity';
 import { TagsService } from 'src/tags/tags.service';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { ArticleInsertInput } from './dto/article.insert.input';
 import { ArticleUpdateInput } from './dto/article.update.input';
 import { Article } from './entity/article.entity';
@@ -57,6 +56,7 @@ export class ArticleService {
       },
     });
   }
+
 
   public async insert(insertInput: ArticleInsertInput) {
     let tags, groups, filePath: FilePathType;
@@ -235,5 +235,38 @@ export class ArticleService {
         },
       ],
     });
+  }
+
+  public async articleByYear(year: number) {
+    const start = new Date(`${year}-01-01`);
+    const end = new Date(`${year}-12-31`);
+    return this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.createTime  BETWEEN :start AND :end', {
+        start,
+        end,
+      })
+      .getMany();
+  }
+
+  public async articleByMonth(year:number,month:number){
+    const start = new Date(year,month - 1,1)
+    const nextMonthFirstDay = new Date(year,month,1)
+    const  oneDay = 1000*60 * 60 * 24
+    let end = new Date(nextMonthFirstDay.getTime() - oneDay);
+    return this.articleRepository.createQueryBuilder('article')
+    .where('article.createTime  BETWEEN :start AND :end', {
+      start,
+      end,
+    })
+    .getMany();
+  }
+
+  public async articleByNewOrLastCreatTime(type: 'ASC' | 'DESC') {
+    return this.articleRepository
+      .createQueryBuilder('article')
+      .orderBy('article.createTime', type)
+      .limit(1)
+      .getOne();
   }
 }
