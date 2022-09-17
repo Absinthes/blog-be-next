@@ -1,11 +1,13 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Tags } from 'src/tags/entity/tags.entity';
+import { Type } from 'src/type/entity/type.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -21,35 +23,29 @@ export class Multimedia {
   @Field()
   title: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   author: string;
 
-  @Column({
-    comment: '1.视频 2.音乐',
-  })
-  @Field()
-  type: number;
-
-  @Column()
-  @Field()
+  @Column({ nullable: true, comment: '文件路径'})
+  @Field({ nullable: true })
   path: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true, comment: '封面图' })
+  @Field({ nullable: true })
   cover: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true, comment: '格式' })
+  @Field({ nullable: true })
   format: string;
 
-  @Column()
-  @Field()
-  isOuterLink: boolean;
+  @Column({ nullable: true, comment: '外链' })
+  @Field({ nullable: true })
+  outerLink: string;
 
   @Column({
     type: 'float',
-    default: 0
+    default: 0,
   })
   @Field()
   weight: number;
@@ -66,4 +62,11 @@ export class Multimedia {
   @JoinTable()
   @Field(() => [Tags])
   tags: Tags[];
+  
+  @ManyToOne(() => Type, (type) => type.multimedia, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  @Field(() => Type, { nullable: true })
+  type: Type;
 }

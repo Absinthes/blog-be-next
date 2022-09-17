@@ -46,7 +46,6 @@ export class CommentService {
     relations.forEach((prop) => {
       re[prop] = true;
     });
-    console.log(re)
     return await this.commnetRepository.findOne({
       where: {
         id,

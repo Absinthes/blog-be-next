@@ -6,7 +6,7 @@ import { createTypeInput } from './dtos/createType.input';
 import { updateTypeInput } from './dtos/updateType.input';
 import { Type } from './entity/type.entity';
 
-type typeType = "rootType" | "parentType" | "childType"
+type typeType = 'rootType' | 'parentType' | 'childType';
 
 @Injectable()
 export class TypeService {
@@ -17,50 +17,60 @@ export class TypeService {
 
   public async getTypeByRoot(offset: number, limit: number) {
     return await this.TypeRepository.createQueryBuilder('type')
-    .leftJoinAndSelect('type.childType',"childType")
-    .leftJoinAndSelect('type.parentType', 'parentType')
-    .leftJoinAndSelect('type.rootType', 'rootType')
-    .leftJoinAndSelect('childType.rootType',"childTypeAndRoot")
-    .leftJoinAndSelect('childType.parentType',"childTypeAndParent")
-    .where('type.rootType IS NULL')
-    .limit(limit)
-    .offset(offset)
-    .getManyAndCount() 
+      .leftJoinAndSelect('type.childType', 'childType')
+      .leftJoinAndSelect('type.parentType', 'parentType')
+      .leftJoinAndSelect('type.rootType', 'rootType')
+      .leftJoinAndSelect('childType.rootType', 'childTypeAndRoot')
+      .leftJoinAndSelect('childType.parentType', 'childTypeAndParent')
+      .where('type.rootType IS NULL')
+      .limit(limit)
+      .offset(offset)
+      .getManyAndCount();
   }
 
-  public async getTypeById(id: string, relations: typeType[] = []) {
+  public getTypeById(id: string, relations: typeType[] = []) {
     const re = {};
     relations.forEach((prop) => {
       re[prop] = true;
     });
-    return await this.TypeRepository.findOne({
-      where:{
-        id
+    return this.TypeRepository.findOne({
+      where: {
+        id,
       },
       relations: {
         ...re,
       },
-    })
+    });
   }
 
-  public async getTypeByPhoto(id:string){
-    return await this.TypeRepository.findOne({
-      where:{
-        photos:{
-          id
-        }
-      }
-    })
+  public getTypeByPhoto(id: string) {
+    return this.TypeRepository.findOne({
+      where: {
+        photos: {
+          id,
+        },
+      },
+    });
   }
 
-  public async getTypeByArticleId(id: string) {
+  public getTypeByArticleId(id: string) {
     return this.TypeRepository.findOne({
       where: {
         articles: {
-          id
-        }
-      }
-    })
+          id,
+        },
+      },
+    });
+  }
+
+  public getTypeByMultimediaId(id: string) {
+    return this.TypeRepository.findOne({
+      where: {
+        multimedia: {
+          id,
+        },
+      },
+    });
   }
 
   public async getTypeParentById(id: string) {
@@ -71,17 +81,17 @@ export class TypeService {
       .getOne();
   }
 
-  public async getTypeByName(name:string){
+  public async getTypeByName(name: string) {
     return await this.TypeRepository.findOne({
       where: [
         {
-          name
+          name,
         },
         {
-          nameEn: name
-        }
-      ]
-    })
+          nameEn: name,
+        },
+      ],
+    });
   }
 
   public async createType(input: createTypeInput) {
@@ -95,21 +105,21 @@ export class TypeService {
     await this.TypeRepository.save(newType);
   }
 
-  public async deleteType(id:string) {
+  public async deleteType(id: string) {
     //删除
-    return await this.TypeRepository.delete(id)
+    return await this.TypeRepository.delete(id);
   }
 
-  public async updateType(input:updateTypeInput){
+  public async updateType(input: updateTypeInput) {
     //修改
-    const {id,...rest} = await getForeign(
+    const { id, ...rest } = await getForeign(
       input,
-      ["rootType","parentType"],
-      [this.getTypeById.bind(this),this.getTypeById.bind(this)]
-    )
-    return await this.TypeRepository.update(id,{
+      ['rootType', 'parentType'],
+      [this.getTypeById.bind(this), this.getTypeById.bind(this)],
+    );
+    return await this.TypeRepository.update(id, {
       // ...input,
       ...rest,
-    })
+    });
   }
 }

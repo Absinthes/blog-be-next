@@ -4,9 +4,13 @@ import { TypeResolver } from './type.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Type } from './entity/type.entity';
 import { ArticleModule } from 'src/article/article.module';
+import { MultimediaModule } from 'src/multimedia/multimedia.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Type]), forwardRef(() => ArticleModule)],
+  imports: [
+    TypeOrmModule.forFeature([Type]),
+    forwardRef(() => ArticleModule),
+  ],
   providers: [TypeService, TypeResolver],
   exports: [TypeService],
 })
