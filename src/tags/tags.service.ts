@@ -126,7 +126,7 @@ export class TagsService {
     });
   }
 
-  public async liveSharedTags(id: string) {
+  public liveSharedTags(id: string) {
     return this.tagsRepository.find({
       where: {
         liveShares: {
@@ -134,6 +134,16 @@ export class TagsService {
         },
       },
     });
+  }
+
+  public multimediaTags(id: string){
+    return this.tagsRepository.find({
+      where: {
+        multimedias: {
+          id
+        }
+      }
+    })
   }
 
   /**

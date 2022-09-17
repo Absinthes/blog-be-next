@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Article } from 'src/article/entity/article.entity';
+import { Multimedia } from 'src/multimedia/entity/multimedia.entity';
 import { PhotoWall } from 'src/photo-wall/entity/photo-wall.entity';
 import {
   Column,
@@ -74,4 +75,11 @@ export class Type {
 
   @Field(() => Boolean)
   hasChildren: boolean;
+
+  @OneToMany(() => Multimedia, (Multimedia) => Multimedia.type, {
+    cascade: true,
+    nullable: true,
+  })
+  @Field(() => [Multimedia])
+  multimedia: Multimedia[];
 }

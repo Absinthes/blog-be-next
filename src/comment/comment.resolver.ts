@@ -118,12 +118,10 @@ export class CommentResolver {
 
   @ResolveField()
   public async childComment(@Parent() comment: Comment) {
-    console.log(comment);
     if (comment.childComment) return comment.childComment;
     let res = await this.commentService.getCommentById(comment.id, [
       'childComment',
     ]);
-    console.log(res);
     return res.childComment;
   }
 

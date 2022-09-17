@@ -58,19 +58,15 @@ type LiveShared {
   tags: [Tags!]!
 }
 
-type Multimedia {
+type PhotoWall {
   id: ID!
-  title: String!
-  author: String!
-  type: Float!
+  name: String!
   path: String!
-  cover: String!
-  format: String!
-  isOuterLink: Boolean!
-  weight: Float!
+  originUrl: String
+  author: String
   createTime: String!
-  updateTime: String!
   tags: [Tags!]!
+  type: Type
 }
 
 type Type {
@@ -85,15 +81,20 @@ type Type {
   photos: [PhotoWall!]!
   articles: [Article!]!
   hasChildren: Boolean!
+  multimedia: [Multimedia!]!
 }
 
-type PhotoWall {
+type Multimedia {
   id: ID!
-  name: String!
-  path: String!
-  originUrl: String
+  title: String!
   author: String
+  path: String
+  cover: String
+  format: String
+  outerLink: String
+  weight: Float!
   createTime: String!
+  updateTime: String!
   tags: [Tags!]!
   type: Type
 }
@@ -200,6 +201,11 @@ type PaginatedLiveShared {
   nodes: [LiveShared!]!
 }
 
+type MultimediaAndCount {
+  nodes: [Multimedia!]
+  totalCount: Int!
+}
+
 type FriendsChainType {
   id: ID!
   name: String!
@@ -253,6 +259,8 @@ type Query {
   getPhotoWallList(input: PaginationQuerInput!): PaginatedPhotoWall!
   getLiveSharedById(id: String!): LiveShared!
   getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
+  getMultimediaList(input: PaginationQuerInput, typeName: String): MultimediaAndCount!
+  getMultimediaById(id: String!): Multimedia!
   getFriendsChainList(input: PaginationQuerInput!): PaginatedFriendsChain!
   getAllFriendsChain: FriendsChain!
   getAllType: [FriendsChainType!]!
@@ -296,6 +304,9 @@ type Mutation {
   createLiveShared(createLiveShared: CreateLiveSharedInput!): StatusModel!
   updateLiveShared(updateLiveShared: UpdateLiveSharedInput!): StatusModel!
   deleteLiveShared(id: String!): StatusModel!
+  createMultimedia(input: MultimediaCreateInput!): StatusModel!
+  updateMultimedia(input: MultimediaUpdateInput!): StatusModel!
+  deleteMultimedia(id: String!): StatusModel!
   createFriendsChain(input: CreateFriendsChainInput!): StatusModel!
   deleteFriendsChain(id: String!): StatusModel!
   deleteChainType(id: String!): StatusModel!
@@ -445,6 +456,29 @@ input UpdateLiveSharedInput {
   address: String
   emotion: String
   tags: [String!]
+}
+
+input MultimediaCreateInput {
+  file: Upload
+  coverFile: Upload
+  title: String!
+  type: String!
+  author: String
+  format: String
+  weight: Float
+  tags: [String!]!
+}
+
+input MultimediaUpdateInput {
+  file: Upload
+  coverFile: Upload
+  id: String!
+  title: String
+  author: String
+  format: String
+  weight: Float
+  tags: [String!]
+  type: String
 }
 
 input CreateFriendsChainInput {
