@@ -106,14 +106,14 @@ export class MultimediaService {
     if(input.type){
       type = await this.typeService.getTypeByName(input.type)
     }
-    const updateInput = omit(input, ['tags', 'file', 'coverFile']);
+    const updateInput = omit(input, ['tags', 'file', 'coverFile', 'id', 'type']);
     //@ts-ignore
-    return this.multimediaRepository.update(input.id, {
+    return this.multimediaRepository.save({
       ...result,
       ...updateInput,
       tags,
-      path: filePath.path,
-      cover: coverFilePath.path,
+      path: filePath?.path,
+      cover: coverFilePath?.path,
       type
     });
   }
