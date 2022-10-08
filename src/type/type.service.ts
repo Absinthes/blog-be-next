@@ -122,4 +122,12 @@ export class TypeService {
       ...rest,
     });
   }
+
+  public nameVague(name: string) {
+    return this.TypeRepository
+      .createQueryBuilder('type')
+      .where('type.name like :name', { name: `%${name}%` })
+      .orWhere('type.nameEn like :name', { name: `%${name}%` })
+      .getMany();
+  }
 }

@@ -10,6 +10,7 @@ import { ArticleInsertInput } from './dto/article.insert.input';
 import { ArticleUpdateInput } from './dto/article.update.input';
 import { Article } from './entity/article.entity';
 import { maxWeight } from 'src/global';
+import { TypeService } from 'src/type/type.service';
 
 @Injectable()
 export class ArticleService {
@@ -19,6 +20,7 @@ export class ArticleService {
     private readonly tagsService: TagsService,
     private readonly groupService: GroupService,
     private readonly fileUploadService: FileUploadService,
+    private readonly typeService: TypeService
   ) {}
 
   public async Artilce(id: string) {
@@ -59,7 +61,7 @@ export class ArticleService {
 
 
   public async insert(insertInput: ArticleInsertInput) {
-    let tags, groups, filePath: FilePathType;
+    let tags, groups, type, filePath: FilePathType;
     insertInput.file &&
       (filePath = await this.fileUploadService.fileUpload(
         await insertInput.file,
@@ -68,12 +70,15 @@ export class ArticleService {
       (tags = await this.tagsService.findOrInsertTags(1, insertInput.tags));
     insertInput.groups &&
       (groups = await this.groupService.findOrInsertGroups(insertInput.groups));
+    insertInput.type && 
+      (type = await this.typeService.getTypeById(insertInput.type))
     const article = await this.articleRepository.create({
       ...insertInput,
       tags,
       contentNum: insertInput.content?.length,
       groups,
       pic: filePath?.path,
+      type
     });
     return await this.articleRepository.save(article);
   }
@@ -94,6 +99,9 @@ export class ArticleService {
       (data.groups = await this.groupService.findOrInsertGroups(
         article.groups,
       ));
+    article.type && 
+        (data.type = await this.typeService.getTypeById(article.type))
+    console.log(data.type)
     Object.assign(result, data);
     return this.articleRepository.save(result);
   }

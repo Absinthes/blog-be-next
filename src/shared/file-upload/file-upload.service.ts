@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { writeFile } from 'fs/promises';
 import { FileUpload } from 'graphql-upload';
@@ -15,7 +15,7 @@ export class FileUploadService {
     file: FileUpload,
     dirName: string = '/PhotoWall',
   ): Promise<FilePathType> {
-    if(!file) return
+    if (!file) return;
     const rootDir = resolve(__dirname, '../../../public');
     const hash = createHash('sha256')
       .update(file.filename + Date.now())

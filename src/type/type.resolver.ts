@@ -49,6 +49,13 @@ export class TypeResolver {
     return (await this.typeService.getTypeByName(name)) || {};
   }
 
+  @Query(() => [Type])
+  public async getTypeByNameVague(
+    @Args('name') name: string
+  ) {
+    return await this.typeService.nameVague(name)
+  }
+
   @Mutation(() => StatusModel)
   public async createType(
     @Args({ name: 'input', type: () => createTypeInput }) input,

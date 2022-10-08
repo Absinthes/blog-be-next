@@ -64,4 +64,8 @@ export class ConfigService {
   public getStaticResourceDir() {
     return resolve(__dirname, '../../public')
   }
+
+  public getTinifyKey() {
+    return this.get('TINIFY_KEY')
+  }
 }

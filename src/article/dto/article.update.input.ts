@@ -15,4 +15,5 @@ export class ArticleUpdateInput {
   groups?: string[]
   @Field(() => GraphQLUpload)
   file?: FileUpload;
+  type?: string
 }

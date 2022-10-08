@@ -274,6 +274,7 @@ type Query {
   getTypeByRoot(input: PaginationQuerInput): TypeAndCount!
   getTypeById(id: String!): Type!
   getTypeByNameAndRoot(name: String!): Type!
+  getTypeByNameVague(name: String!): [Type!]!
   getPhotoWallList(input: PaginationQuerInput!): PaginatedPhotoWall!
   getLiveSharedById(id: String!): LiveShared!
   getLiveSharedList(paginationQuery: PaginationQuerInput!): PaginatedLiveShared!
@@ -349,6 +350,7 @@ input ArticleInsertInput {
   content: String
   tags: [String!]
   groups: [String!]
+  type: String
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -364,6 +366,7 @@ input ArticleUpdateInput {
   isPublic: Boolean
   tags: [String!]
   groups: [String!]
+  type: String
 }
 
 input TagsCreateInput {

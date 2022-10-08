@@ -1,6 +1,11 @@
 import { existsSync } from 'fs';
 import { mkdir, unlink, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
+import { Stream } from 'stream';
+import tinify from 'tinify';
+
+tinify.key = "YjMV8kCvw0JkLVhzCPVDrVdjF1slJ9RW"
+
 
 /**
  * 创建目录
@@ -24,14 +29,16 @@ export async function saveFile(
   rootDir: string,
   dirName: string,
   name: string,
-  data: any,
+  data: Stream,
 ) {
   let dirPath = join(rootDir, dirName);
   if (!existsSync(dirPath)) {
     await mkDir(dirPath);
   }
   const path = join(dirPath, name);
-  await writeFile(path, data);
+  const bufferData = await streamToBuffer(data)
+  await tinify.fromBuffer(bufferData).toFile(path)
+  // await writeFile(path, data);
   return {
     origin: path,
     relative: join(dirName, name),
@@ -44,4 +51,18 @@ export async function saveFile(
  */
 export async function deleteFile(path: string) {
   return unlink(path);
+}
+
+/**
+ * stream转换为Buffer
+ * @param stream 
+ * @returns 
+ */
+export function streamToBuffer(stream: Stream): Promise<Buffer> {  
+  return new Promise((resolve, reject) => {
+    let buffers = [];
+    stream.on('error', reject);
+    stream.on('data', (data) => buffers.push(data));
+    stream.on('end', () => resolve(Buffer.concat(buffers)))
+  })
 }
